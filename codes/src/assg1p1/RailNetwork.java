@@ -183,24 +183,29 @@ public class RailNetwork {
 			return ans;
 		}
 		  
-		Station a = stationList.get(origin);
-		ArrayList<String> temp = new ArrayList<>();
-		temp.add(origin);
+		HashMap<String, Integer> dist = new HashMap<>();
+		HashMap<String, Integer> bfsResult = bfsHelper(origin, destination, dist);
+		System.out.println(bfsResult);
+		return null;
+	}
+	
+	public HashMap<String, Integer> bfsHelper(String start, String end, HashMap<String, Integer> dist) {
+		Station a = stationList.get(start);
+		dist.put(start, 0);
 		if (!a.isMarked()) {
 			 a.setMarked();
 			 Queue<Station> q = new LinkedList<Station>();
 			 q.add(a);
-			 while (q.size() != 0) {
+			 while (!q.isEmpty()) {
 				 a = q.poll();
-				 System.out.print(a.getName() + " ");
 				 for (Station s : a.getAdjacentStations().keySet()) {
 					 if (!s.isMarked()) {
-						 temp.add(s.getName());
+						 dist.put(s.getName(), a.getAdjacentStations().get(s));
 						 s.setMarked();
 						 q.add(s);
 					 }
-					 if (s.equals(stationList.get(destination))) {
-						 return temp;
+					 if (s.equals(stationList.get(end))) {
+						 return dist;
 					 }
 				 }
 			 }
