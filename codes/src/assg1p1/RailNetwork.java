@@ -183,43 +183,29 @@ public class RailNetwork {
 			return ans;
 		}
 		  
-        for (String s : stationList.keySet()) {
-            dist.put(s, Integer.MAX_VALUE); 
-        }
-  
-        // Add source node to the priority queue 
-        pq.add(stationList.get(origin)); 
-  
-        // Distance to the source is 0 
-        dist.replace(origin, 0);
-        while (settled.size() != V) { 
-            Station u = pq.remove();
-            settled.add(u); 
-            
-            e_Neighbours(u); 
-        } 
-        
-        return new ArrayList<String>();
+		Station a = stationList.get(origin);
+		ArrayList<String> temp = new ArrayList<>();
+		temp.add(origin);
+		if (!a.isMarked()) {
+			 a.setMarked();
+			 Queue<Station> q = new LinkedList<Station>();
+			 q.add(a);
+			 while (q.size() != 0) {
+				 a = q.poll();
+				 System.out.print(a.getName() + " ");
+				 for (Station s : a.getAdjacentStations().keySet()) {
+					 if (!s.isMarked()) {
+						 temp.add(s.getName());
+						 s.setMarked();
+						 q.add(s);
+					 }
+					 if (s.equals(stationList.get(destination))) {
+						 return temp;
+					 }
+				 }
+			 }
+		} return null;
 	}
-	
-	private void e_Neighbours(Station u) { 
-        int edgeDistance = -1; 
-        int newDistance = -1; 
-  
-        for (Station v : u.getAdjacentStations().keySet()) {
-            if (!settled.contains(v)) { 
-                edgeDistance = u.getAdjacentStations().get(v); 
-                newDistance = dist.get(u.getName()) + edgeDistance; 
-  
-                // If new distance is cheaper in cost 
-                if (newDistance < dist.get(v.getName())) 
-                    dist.replace(v.getName(), newDistance); 
-  
-                // Add the current node to the queue 
-                pq.add(v); 
-            } 
-        } 
-    } 
 
 	/**
 	 * The method finds the shortest route (in terms of distance travelled) 
