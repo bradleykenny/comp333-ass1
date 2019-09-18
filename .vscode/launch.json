@@ -1,0 +1,18 @@
+{
+	"configurations": [
+		{
+			"type": "java",
+			"name": "CodeLens (Launch) - RailNetwork",
+			"request": "launch",
+			"mainClass": "assg1p1.RailNetwork",
+			"projectName": "codes"
+		},
+		{
+			"type": "java",
+			"name": "CodeLens (Launch) - GraphTest",
+			"request": "launch",
+			"mainClass": "week1.GraphTest",
+			"projectName": "codes"
+		}
+	]
+}

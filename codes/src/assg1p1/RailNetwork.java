@@ -10,16 +10,35 @@ public class RailNetwork {
 	
 	private TreeMap<String,Station> stationList;
 	
+	// TEST
+	private HashMap<String, Integer> dist; 
+    private Set<Station> settled; 
+    private PriorityQueue<Station> pq; 
+    private int V; // Number of vertices 
+    List<List<Station> > adj; 
+	
 	public RailNetwork(String trainData, String connectionData) {
 		stationList = new TreeMap<>();
 		
-		try {	
+		try {
 			readStationData(trainData);
 			readConnectionData(connectionData);
+			
+			// more testing
+			this.V = stationList.size(); 
+	        dist = new HashMap<>(V); 
+	        settled = new HashSet<Station>(); 
+	        pq = new PriorityQueue<Station>();
 		}
 		catch (IOException e) {
 			System.out.println("Exception encountered: " + e);
 		}
+	}
+	
+	public static void main(String[] args) {
+		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
+		
+		System.out.println("\n== ROUTE CALCULATIONS ==\nCentral -> Richmond\n" + rn.routeMinDistance("Richmond", "Blacktown"));
 	}
 	
 	/**
@@ -37,9 +56,11 @@ public class RailNetwork {
 	 */
 	public void readStationData(String infile) throws IOException{
 		BufferedReader in = new BufferedReader(new FileReader(infile));
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
+		in.readLine(); // remove headers
+		while (in.ready()) {
+			String[] temp = in.readLine().split(",");
+			stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
+		}
 		in.close();
 	}
 	/**
@@ -56,9 +77,14 @@ public class RailNetwork {
 	 */	
 	public void readConnectionData(String infile) throws IOException{
 		BufferedReader in = new BufferedReader(new FileReader(infile));
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
+		while (in.ready()) {
+			String[] temp = in.readLine().split(",");
+			int distance = computeDistance(temp[0], temp[1]);
+
+			stationList.get(temp[0]).addNeighbour(stationList.get(temp[1]), distance);
+			stationList.get(temp[1]).addNeighbour(stationList.get(temp[0]), distance);
+		}
+
 		in.close();
 	}
 	
@@ -92,7 +118,7 @@ public class RailNetwork {
                    Math.pow(Math.sin(dLon / 2), 2) *  
                    Math.cos(lat1) *  
                    Math.cos(lat2); 
-        double rad = 6371.0; 
+        double rad = 6371.0;
         Double c = 2 * Math.asin(Math.sqrt(a)); 
         Double distance = rad * c * 1000;
         return distance.intValue(); 
@@ -146,21 +172,54 @@ public class RailNetwork {
 	 * @param destination	the destination station
 	 * @return
 	 */
-	public ArrayList<String> routeMinDistance(String origin, String destination){
+	public ArrayList<String> routeMinDistance(String origin, String destination) {
 		if (!stationList.containsKey(origin) || !stationList.containsKey(destination)) {
 			return new ArrayList<String>();
 		}
+		
 		if (origin.equals(destination)) {
 			ArrayList<String> ans = new ArrayList<String>();
 			ans.add(origin);
 			return ans;
 		}
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
-	
-		return null;
+		  
+        for (String s : stationList.keySet()) {
+            dist.put(s, Integer.MAX_VALUE); 
+        }
+  
+        // Add source node to the priority queue 
+        pq.add(stationList.get(origin)); 
+  
+        // Distance to the source is 0 
+        dist.replace(origin, 0);
+        while (settled.size() != V) { 
+            Station u = pq.remove();
+            settled.add(u); 
+            
+            e_Neighbours(u); 
+        } 
+        
+        return new ArrayList<String>();
 	}
+	
+	private void e_Neighbours(Station u) { 
+        int edgeDistance = -1; 
+        int newDistance = -1; 
+  
+        for (Station v : u.getAdjacentStations().keySet()) {
+            if (!settled.contains(v)) { 
+                edgeDistance = u.getAdjacentStations().get(v); 
+                newDistance = dist.get(u.getName()) + edgeDistance; 
+  
+                // If new distance is cheaper in cost 
+                if (newDistance < dist.get(v.getName())) 
+                    dist.replace(v.getName(), newDistance); 
+  
+                // Add the current node to the queue 
+                pq.add(v); 
+            } 
+        } 
+    } 
 
 	/**
 	 * The method finds the shortest route (in terms of distance travelled) 
