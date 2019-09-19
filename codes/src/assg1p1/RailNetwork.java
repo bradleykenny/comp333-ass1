@@ -9,13 +9,7 @@ public class RailNetwork {
 	//private final double THRESHOLD = 0.000001;
 	
 	private TreeMap<String,Station> stationList;
-	
-	// TEST
-	private HashMap<String, Integer> dist; 
-    private Set<Station> settled; 
-    private PriorityQueue<Station> pq; 
-    private int V; // Number of vertices 
-    List<List<Station> > adj; 
+	private List<List<String>> allPaths;
 	
 	public RailNetwork(String trainData, String connectionData) {
 		stationList = new TreeMap<>();
@@ -23,12 +17,6 @@ public class RailNetwork {
 		try {
 			readStationData(trainData);
 			readConnectionData(connectionData);
-			
-			// more testing
-			this.V = stationList.size(); 
-	        dist = new HashMap<>(V); 
-	        settled = new HashSet<Station>(); 
-	        pq = new PriorityQueue<Station>();
 		}
 		catch (IOException e) {
 			System.out.println("Exception encountered: " + e);
@@ -38,7 +26,7 @@ public class RailNetwork {
 	public static void main(String[] args) {
 		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
 		
-		System.out.println("\n== ROUTE CALCULATIONS ==\nCentral -> Richmond\n" + rn.routeMinDistance("Richmond", "Blacktown"));
+		System.out.println("\n== ROUTE CALCULATIONS ==\nCentral -> Richmond\n" + rn.routeMinDistance("Richmond", "Central"));
 	}
 	
 	/**
@@ -183,33 +171,60 @@ public class RailNetwork {
 			return ans;
 		}
 		  
-		HashMap<String, Integer> dist = new HashMap<>();
-		HashMap<String, Integer> bfsResult = bfsHelper(origin, destination, dist);
-		System.out.println(bfsResult);
-		return null;
+		HashMap<String, Boolean> isVisited = new HashMap<>();
+		for (String s : stationList.keySet()) {
+			isVisited.put(s, false);
+		}
+        ArrayList<String> pathList = new ArrayList<>(); 
+        allPaths = new ArrayList<List<String>>();
+        pathList.add(origin); 
+        getAllPaths(origin, destination, isVisited, pathList); 
+        return findSmallestPath(allPaths);
 	}
 	
-	public HashMap<String, Integer> bfsHelper(String start, String end, HashMap<String, Integer> dist) {
-		Station a = stationList.get(start);
-		dist.put(start, 0);
-		if (!a.isMarked()) {
-			 a.setMarked();
-			 Queue<Station> q = new LinkedList<Station>();
-			 q.add(a);
-			 while (!q.isEmpty()) {
-				 a = q.poll();
-				 for (Station s : a.getAdjacentStations().keySet()) {
-					 if (!s.isMarked()) {
-						 dist.put(s.getName(), a.getAdjacentStations().get(s));
-						 s.setMarked();
-						 q.add(s);
-					 }
-					 if (s.equals(stationList.get(end))) {
-						 return dist;
-					 }
-				 }
-			 }
-		} return null;
+	private void getAllPaths(String u, String d, HashMap<String, Boolean> isVisited, List<String> localPathList) {  
+		isVisited.replace(u, true); 
+		
+		if (u.equals(d)) { 
+			//System.out.println(localPathList);
+			allPaths.add(new ArrayList<>(localPathList));
+			isVisited.replace(u, false);
+			return; 
+		} 
+		
+		for (Station i : stationList.get(u).getAdjacentStations().keySet()) { 
+			if (!isVisited.get(i.getName())) {
+				localPathList.add(i.getName()); 
+				getAllPaths(i.getName(), d, isVisited, localPathList); 
+				localPathList.remove(i.getName()); 
+			} 
+		} 
+		isVisited.replace(u, false);
+	} 
+	
+	private ArrayList<String> findSmallestPath(List<List<String>> paths) {
+		if (paths.size() == 0) {
+			return null;
+		}
+		
+		int min = Integer.MAX_VALUE;
+		ArrayList<String> minList = new ArrayList<>();
+		for (List<String> l : paths) {
+			int total = 0;
+			String prev = "";
+			for (String s : l) {
+				if (!prev.isEmpty()) {
+					total += stationList.get(prev).getAdjacentStations().get(stationList.get(s));
+				} prev = s;
+			}
+			
+			if (total < min) {
+				minList = new ArrayList<>(l);
+				min = total;
+			}
+		}
+		
+		return minList;
 	}
 
 	/**
