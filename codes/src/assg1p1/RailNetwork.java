@@ -26,7 +26,7 @@ public class RailNetwork {
 	public static void main(String[] args) {
 		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
 		
-		System.out.println("\n== ROUTE CALCULATIONS ==\nCentral -> Richmond\n" + rn.findTotalDistance(rn.routeMinDistance("Hornsby", "Chatswood")));
+		System.out.println("\n== ROUTE CALCULATIONS ==\nCentral -> Richmond\n" + rn.routeMinDistance("Hornsby", "Chatswood"));
 		
 		TreeSet<String> failures = new TreeSet<>();
 		failures.add("Beecroft");
