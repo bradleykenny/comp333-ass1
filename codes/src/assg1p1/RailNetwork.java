@@ -175,7 +175,7 @@ public class RailNetwork {
 		for (String s : stationList.keySet()) {
 			isVisited.put(s, false);
 		}
-        ArrayList<String> pathList = new ArrayList<>(); 
+		ArrayList<String> pathList = new ArrayList<>(); 
         allPaths = new ArrayList<List<String>>();
         pathList.add(origin); 
         getAllPaths(origin, destination, isVisited, pathList); 
