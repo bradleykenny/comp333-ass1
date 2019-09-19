@@ -26,7 +26,13 @@ public class RailNetwork {
 	public static void main(String[] args) {
 		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
 		
-		System.out.println("\n== ROUTE CALCULATIONS ==\nCentral -> Richmond\n" + rn.routeMinDistance("Richmond", "Central"));
+		System.out.println("\n== ROUTE CALCULATIONS ==\nCentral -> Richmond\n" + rn.findTotalDistance(rn.routeMinDistance("Hornsby", "Chatswood")));
+		
+		TreeSet<String> failures = new TreeSet<>();
+		failures.add("Beecroft");
+		System.out.println(rn.routeMinDistance("Hornsby", "Epping", failures));
+		
+		System.out.println(rn.routeMinStop("Richmond", "Central"));
 	}
 	
 	/**
@@ -175,18 +181,20 @@ public class RailNetwork {
 		for (String s : stationList.keySet()) {
 			isVisited.put(s, false);
 		}
+		
 		ArrayList<String> pathList = new ArrayList<>(); 
         allPaths = new ArrayList<List<String>>();
         pathList.add(origin); 
         getAllPaths(origin, destination, isVisited, pathList); 
-        return findSmallestPath(allPaths);
+        return findSmallestDist(allPaths);
 	}
 	
+	// Helper method to find all paths from origin -> destination.
 	private void getAllPaths(String u, String d, HashMap<String, Boolean> isVisited, List<String> localPathList) {  
 		isVisited.replace(u, true); 
 		
 		if (u.equals(d)) { 
-			//System.out.println(localPathList);
+			// System.out.println(localPathList);
 			allPaths.add(new ArrayList<>(localPathList));
 			isVisited.replace(u, false);
 			return; 
@@ -202,7 +210,8 @@ public class RailNetwork {
 		isVisited.replace(u, false);
 	} 
 	
-	private ArrayList<String> findSmallestPath(List<List<String>> paths) {
+	// Helper method to calculate shortest path from list of paths from origin -> destination.
+	private ArrayList<String> findSmallestDist(List<List<String>> paths) {
 		if (paths.size() == 0) {
 			return null;
 		}
@@ -261,10 +270,29 @@ public class RailNetwork {
 			ans.add(origin);
 			return ans;
 		}
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
-		return null;
+		
+		HashMap<String, Boolean> isVisited = new HashMap<>();
+		for (String s : stationList.keySet()) {
+			isVisited.put(s, false);
+		}
+		
+		ArrayList<String> pathList = new ArrayList<>(); 
+        allPaths = new ArrayList<List<String>>();
+        pathList.add(origin); 
+        getAllPaths(origin, destination, isVisited, pathList);
+        List<List<String>> newList = new ArrayList<>();
+        for (List<String> l : allPaths) {
+        	boolean flag = false;
+        	for (String s : failures) {
+        		if (l.contains(s)) {
+        			flag = true;
+        		}
+        	} 
+        	if (!flag) {
+        		newList.add(new ArrayList<>(l));
+        	}
+        }
+        return findSmallestDist(newList);
 	}
 	/**
 	 * The method finds the shortest route (in terms of number of stops)
@@ -295,10 +323,34 @@ public class RailNetwork {
 			ans.add(origin);
 			return ans;
 		}
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
-		return null;
+		
+		HashMap<String, Boolean> isVisited = new HashMap<>();
+		for (String s : stationList.keySet()) {
+			isVisited.put(s, false);
+		}
+		
+		ArrayList<String> pathList = new ArrayList<>(); 
+        allPaths = new ArrayList<List<String>>(); // reset
+        pathList.add(origin); 
+        getAllPaths(origin, destination, isVisited, pathList); 
+        return findSmallestStops(allPaths);
+	}
+	
+	private ArrayList<String> findSmallestStops(List<List<String>> paths) {
+		if (paths.size() == 0) {
+			return null;
+		}
+		
+		int min = Integer.MAX_VALUE;
+		ArrayList<String> minList = new ArrayList<>();
+		for (List<String> l : paths) {
+			if (l.size() < min) {
+				minList = new ArrayList<>(l);
+				min = l.size();
+			}
+		}
+		
+		return minList;
 	}
 
 	/**
@@ -350,9 +402,12 @@ public class RailNetwork {
 	 */
 	public int findTotalDistance(ArrayList<String> path) {
 		int distance = 0;
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
+		String prev = "";
+		for (String s : path) {
+			if (!prev.isEmpty()) {
+				distance += stationList.get(prev).getAdjacentStations().get(stationList.get(s));
+			} prev = s;
+		}
 		return distance;
 	}
 	
