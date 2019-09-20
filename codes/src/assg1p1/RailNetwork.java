@@ -9,10 +9,11 @@ public class RailNetwork {
 	//private final double THRESHOLD = 0.000001;
 	
 	private TreeMap<String,Station> stationList;	
-	private ArrayList<String> currentList = new ArrayList<>();
+	private ArrayList<String> currentList;
 	
 	public RailNetwork(String trainData, String connectionData) {
 		stationList = new TreeMap<>();
+		currentList = new ArrayList<>();
 		
 		try {
 			readStationData(trainData);
@@ -78,7 +79,6 @@ public class RailNetwork {
 			stationList.get(temp[0]).addNeighbour(stationList.get(temp[1]), distance);
 			stationList.get(temp[1]).addNeighbour(stationList.get(temp[0]), distance);
 		}
-
 		in.close();
 	}
 	
@@ -189,25 +189,25 @@ public class RailNetwork {
 	}
 	
 	// Helper method to find all paths from origin -> destination.
-	private void getPath(String u, String d, ArrayList<String> localPathList) {  
-		stationList.get(u).setMarked();
+	private void getPath(String origin, String destination, ArrayList<String> localPathList) {  
+		stationList.get(origin).setMarked();
 		
-		if (u.equals(d)) { 
+		if (origin.equals(destination)) { 
 			if (findTotalDistance(localPathList) < findTotalDistance(currentList) || currentList.isEmpty()) {
 				currentList = new ArrayList<>(localPathList);
 			}
-			stationList.get(u).setUnmarked();
+			stationList.get(origin).setUnmarked();
 			return; 
 		} 
 		
-		for (Station i : stationList.get(u).getAdjacentStations().keySet()) { 
+		for (Station i : stationList.get(origin).getAdjacentStations().keySet()) { 
 			if (!stationList.get(i.getName()).isMarked()) {
 				localPathList.add(i.getName()); 
-				getPath(i.getName(), d, localPathList); 
+				getPath(i.getName(), destination, localPathList); 
 				localPathList.remove(i.getName()); 
 			} 
 		} 
-		stationList.get(u).setUnmarked();
+		stationList.get(origin).setUnmarked();
 	} 
 
 	/**
