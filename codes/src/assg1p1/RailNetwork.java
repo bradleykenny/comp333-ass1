@@ -8,9 +8,7 @@ public class RailNetwork {
 
 	//private final double THRESHOLD = 0.000001;
 	
-	private TreeMap<String,Station> stationList;
-	private List<List<String>> allPaths;
-	
+	private TreeMap<String,Station> stationList;	
 	private ArrayList<String> currentList = new ArrayList<>();
 	
 	public RailNetwork(String trainData, String connectionData) {
@@ -98,7 +96,7 @@ public class RailNetwork {
 	 * @param lon1 longitude coordinate of x
 	 * @param lat2 latitude coordinate of y
 	 * @param lon2 longitude coordinate of y
-	 * @return distance betwee
+	 * @return distance between
 	 */
 	public static int computeDistance(double lat1, double lon1, double lat2, double lon2) {
         // distance between latitudes and longitudes 
@@ -186,12 +184,12 @@ public class RailNetwork {
 		currentList = new ArrayList<String>();
 		ArrayList<String> pathList = new ArrayList<>(); 
         pathList.add(origin); 
-        getAllPaths(origin, destination, pathList); 
+        getPath(origin, destination, pathList); 
         return currentList;
 	}
 	
 	// Helper method to find all paths from origin -> destination.
-	private void getAllPaths(String u, String d, ArrayList<String> localPathList) {  
+	private void getPath(String u, String d, ArrayList<String> localPathList) {  
 		stationList.get(u).setMarked();
 		
 		if (u.equals(d)) { 
@@ -205,7 +203,7 @@ public class RailNetwork {
 		for (Station i : stationList.get(u).getAdjacentStations().keySet()) { 
 			if (!stationList.get(i.getName()).isMarked()) {
 				localPathList.add(i.getName()); 
-				getAllPaths(i.getName(), d, localPathList); 
+				getPath(i.getName(), d, localPathList); 
 				localPathList.remove(i.getName()); 
 			} 
 		} 
@@ -254,22 +252,38 @@ public class RailNetwork {
 		currentList = new ArrayList<String>();
 		ArrayList<String> pathList = new ArrayList<>(); 
         pathList.add(origin); 
-        getAllPaths(origin, destination, pathList);
-        List<List<String>> newList = new ArrayList<>();
-        for (List<String> l : allPaths) {
-        	boolean flag = false;
-        	for (String s : failures) {
-        		if (l.contains(s)) {
-        			flag = true;
-        		}
-        	} 
-        	if (!flag) {
-        		newList.add(new ArrayList<>(l));
-        	}
-        }
-        getAllPaths(origin, destination, pathList); 
+        getPathF(origin, destination, failures, pathList); 
         return currentList;
 	}
+	
+	// Helper method to find all paths from origin -> destination.
+	private void getPathF(String u, String d, TreeSet<String> f, ArrayList<String> localPathList) {  
+		stationList.get(u).setMarked();
+		
+		if (u.equals(d)) { 
+			boolean contains = false;
+			for (String fail : f) {
+				if (localPathList.contains(fail)) {
+					contains = true;
+				}
+			}
+			if (contains == false && (findTotalDistance(localPathList) < findTotalDistance(currentList) || currentList.isEmpty())) {
+				currentList = new ArrayList<>(localPathList);
+			}
+			stationList.get(u).setUnmarked();
+			return; 
+		} 
+		
+		for (Station i : stationList.get(u).getAdjacentStations().keySet()) { 
+			if (!stationList.get(i.getName()).isMarked()) {
+				localPathList.add(i.getName()); 
+				getPathF(i.getName(), d, f, localPathList); 
+				localPathList.remove(i.getName()); 
+			} 
+		} 
+		stationList.get(u).setUnmarked();
+	} 
+	
 	/**
 	 * The method finds the shortest route (in terms of number of stops)
 	 * between the origin station and the destination station.
@@ -304,29 +318,35 @@ public class RailNetwork {
 			stationList.get(s).setUnmarked();
 		}
 		
+		currentList = new ArrayList<String>();
 		ArrayList<String> pathList = new ArrayList<>(); 
-        allPaths = new ArrayList<List<String>>(); // reset
         pathList.add(origin); 
-        getAllPaths(origin, destination, pathList); 
-        return findSmallestStops(allPaths);
+        getPathS(origin, destination, pathList); 
+        return currentList;
 	}
 	
-	private ArrayList<String> findSmallestStops(List<List<String>> paths) {
-		if (paths.size() == 0) {
-			return new ArrayList<String>();
-		}
+	private void getPathS(String u, String d, ArrayList<String> localPathList) {  
+		stationList.get(u).setMarked();
 		
-		int min = Integer.MAX_VALUE;
-		ArrayList<String> minList = new ArrayList<>();
-		for (List<String> l : paths) {
-			if (l.size() < min) {
-				minList = new ArrayList<>(l);
-				min = l.size();
+		if (u.equals(d)) { 
+			if (localPathList.size() < currentList.size() || currentList.isEmpty()) {
+				currentList = new ArrayList<>(localPathList);
 			}
-		}
+			stationList.get(u).setUnmarked();
+			return; 
+		} 
 		
-		return minList;
-	}
+		for (Station i : stationList.get(u).getAdjacentStations().keySet()) { 
+			if (!stationList.get(i.getName()).isMarked()) {
+				localPathList.add(i.getName()); 
+				getPathS(i.getName(), d, localPathList); 
+				localPathList.remove(i.getName()); 
+			} 
+		} 
+		stationList.get(u).setUnmarked();
+	} 
+	
+
 
 	/**
 	 * The method finds the shortest route (in terms of number of stops)
@@ -366,24 +386,40 @@ public class RailNetwork {
 			stationList.get(s).setUnmarked();
 		}
 		
+		currentList = new ArrayList<String>();
 		ArrayList<String> pathList = new ArrayList<>(); 
-        allPaths = new ArrayList<List<String>>();
         pathList.add(origin); 
-        getAllPaths(origin, destination, pathList); 
-        List<List<String>> newList = new ArrayList<>();
-        for (List<String> l : allPaths) {
-        	boolean flag = false;
-        	for (String s : failures) {
-        		if (l.contains(s)) {
-        			flag = true;
-        		}
-        	} 
-        	if (!flag) {
-        		newList.add(new ArrayList<>(l));
-        	}
-        }
-        return findSmallestStops(newList);
+        getStopF(origin, destination, failures, pathList); 
+        return currentList;
 	}
+	
+	// Helper method to find all paths from origin -> destination.
+	private void getStopF(String u, String d, TreeSet<String> f, ArrayList<String> localPathList) {  
+		stationList.get(u).setMarked();
+		
+		if (u.equals(d)) { 
+			boolean contains = false;
+			for (String fail : f) {
+				if (localPathList.contains(fail)) {
+					contains = true;
+				}
+			}
+			if (contains == false && (localPathList.size() < currentList.size() || currentList.isEmpty())) {
+				currentList = new ArrayList<>(localPathList);
+			}
+			stationList.get(u).setUnmarked();
+			return; 
+		} 
+		
+		for (Station i : stationList.get(u).getAdjacentStations().keySet()) { 
+			if (!stationList.get(i.getName()).isMarked()) {
+				localPathList.add(i.getName()); 
+				getStopF(i.getName(), d, f, localPathList); 
+				localPathList.remove(i.getName()); 
+			} 
+		} 
+		stationList.get(u).setUnmarked();
+	} 
 	
 	/**
 	 * Given a route between two stations, compute the total distance 
