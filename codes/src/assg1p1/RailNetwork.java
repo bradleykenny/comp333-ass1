@@ -176,19 +176,23 @@ public class RailNetwork {
 			ans.add(origin);
 			return ans;
 		}
+		
+		// my code here
 		  
 		for (String s : stationList.keySet()) {
 			stationList.get(s).setUnmarked();
 		}
 		
-		currentList = new ArrayList<String>();
+		currentList = new ArrayList<String>(); // reset
+		
 		ArrayList<String> pathList = new ArrayList<>(); 
         pathList.add(origin); 
-        getPath(origin, destination, pathList); 
+		
+		getPath(origin, destination, pathList); 
         return currentList;
 	}
 	
-	// Helper method to find all paths from origin -> destination.
+	// Helper method to find best path from origin -> destination.
 	private void getPath(String origin, String destination, ArrayList<String> localPathList) {  
 		stationList.get(origin).setMarked();
 		
@@ -457,6 +461,9 @@ public class RailNetwork {
 		/*
 		 * INSERT YOUR CODE HERE
 		 */
+
+		 // do this with top down dp approach
+		 // -> like rod cutting
 		
 		return 0;
 	}
