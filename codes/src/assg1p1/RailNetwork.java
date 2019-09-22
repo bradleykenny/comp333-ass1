@@ -177,50 +177,37 @@ public class RailNetwork {
 			return ans;
 		}
 
-		// Integer is the shortest distance to String
-		HashMap<String, Integer> dist = new HashMap<>();
+		HashMap<String, Integer> dist = new HashMap<>(); // Value is shortest distance from Key to d
+		HashMap<String, String> parents = new HashMap<>(); // Value is the closest station to the Key (in direction o -> d)
   
-        // Boolean is true if String is included in shortest path.
-		HashMap<String, String> parents = new HashMap<>();
-  
-        // Initialize all distances as INFINITE and stpSet[] as false 
+		// Initialisation of values
         for (String s : stationList.keySet()) { 
             dist.put(s, Integer.MAX_VALUE);
 			stationList.get(s).setUnmarked();
 			parents.put(s, "");
         } 
   
-        // Distance of source vertex from itself is always 0 
+        // Distance of origin to itself is always 0 
         dist.replace(origin, 0);
 		
-        // Find shortest path for all vertices 
         for (String s : stationList.keySet()) { 
-            // Pick the minimum distance vertex from the set of vertices 
-            // not yet processed. u is always equal to src in first 
-			// iteration. 
-			
-			int min = Integer.MAX_VALUE;
-			String u = null; 
+            int min = Integer.MAX_VALUE;
+			String nextShortest = null; 
   
-			for (String v : stationList.keySet()) {
-				if (!stationList.get(v).isMarked() && dist.get(v) <= min) { 
-					min = dist.get(v); 
-					u = v; 
+			// Find next best station in terms of distance
+			for (String possibleStation : stationList.keySet()) {
+				if (!stationList.get(possibleStation).isMarked() && dist.get(possibleStation) <= min) { 
+					min = dist.get(possibleStation); 
+					nextShortest = possibleStation; 
 				} 
-			}
+			} stationList.get(nextShortest).setMarked();
   
-            // Mark the picked vertex as processed 
-            stationList.get(u).setMarked();
-  
-            // Update dist value of the adjacent vertices of the 
-            // picked vertex. 
-            for (Station adj : stationList.get(u).getAdjacentStations().keySet()) { 
-                // Update dist[v] only if is not in sptSet, there is an 
-                // edge from u to v, and total weight of path from src to 
-				// v through u is smaller than current value of dist[v] 
-                if (!stationList.get(adj.getName()).isMarked()&& stationList.get(u).getAdjacentStations().containsKey(adj) && dist.get(u) != Integer.MAX_VALUE && (dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
-					dist.replace(adj.getName(), dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)); 
-					parents.replace(adj.getName(), u);
+            // Updating distance of adjacent stations to picked station
+            for (Station adj : stationList.get(nextShortest).getAdjacentStations().keySet()) { 
+                if (!stationList.get(adj.getName()).isMarked()&& stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && dist.get(nextShortest) != Integer.MAX_VALUE && (dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
+					dist.replace(adj.getName(), dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)); // Update dist to reflect new shortest distance to this path
+					parents.replace(adj.getName(), nextShortest); // Update parent to be the new best path to this station
+					// Once we get to the destination, stop and return
 					if (parents.get(adj.getName()).equals(destination)) {
 						ArrayList<String> temp = getStops(parents, origin, destination);
 						return temp;
@@ -229,12 +216,11 @@ public class RailNetwork {
 			}
         } 
 
-
+		// If don't find anything, return empty ArrayList.
 		return new ArrayList<>();
 	}
 
-
-	// helper method to get all stops in the parents arraylist
+	// Helper method to get all stops in the parents HashMap
 	public ArrayList<String> getStops(HashMap<String, String> parents, String origin, String destination) {
 		ArrayList<String> temp = new ArrayList<>();
 		temp.add(destination);
