@@ -181,13 +181,12 @@ public class RailNetwork {
 		HashMap<String, Integer> dist = new HashMap<>();
   
         // Boolean is true if String is included in shortest path.
-		HashMap<String,Boolean> sptSet = new HashMap<>(); 
 		HashMap<String, String> parents = new HashMap<>();
   
         // Initialize all distances as INFINITE and stpSet[] as false 
         for (String s : stationList.keySet()) { 
             dist.put(s, Integer.MAX_VALUE);
-			sptSet.put(s, false);
+			stationList.get(s).setUnmarked();
 			parents.put(s, "");
         } 
   
@@ -201,17 +200,17 @@ public class RailNetwork {
 			// iteration. 
 			
 			int min = Integer.MAX_VALUE;
-			String u = ""; 
+			String u = null; 
   
 			for (String v : stationList.keySet()) {
-				if (sptSet.get(v) == false && dist.get(v) <= min) { 
+				if (!stationList.get(v).isMarked() && dist.get(v) <= min) { 
 					min = dist.get(v); 
 					u = v; 
 				} 
 			}
   
             // Mark the picked vertex as processed 
-            sptSet.replace(u, true);
+            stationList.get(u).setMarked();
   
             // Update dist value of the adjacent vertices of the 
             // picked vertex. 
@@ -219,7 +218,7 @@ public class RailNetwork {
                 // Update dist[v] only if is not in sptSet, there is an 
                 // edge from u to v, and total weight of path from src to 
 				// v through u is smaller than current value of dist[v] 
-                if (!sptSet.get(adj.getName()) && stationList.get(u).getAdjacentStations().containsKey(adj) && dist.get(u) != Integer.MAX_VALUE && (dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
+                if (!stationList.get(adj.getName()).isMarked()&& stationList.get(u).getAdjacentStations().containsKey(adj) && dist.get(u) != Integer.MAX_VALUE && (dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
 					dist.replace(adj.getName(), dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)); 
 					parents.replace(adj.getName(), u);
 					if (parents.get(adj.getName()).equals(destination)) {
