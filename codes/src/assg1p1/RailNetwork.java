@@ -373,7 +373,7 @@ public class RailNetwork {
 				if (!stationList.get(adj.getName()).isMarked()&& stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && stops.get(nextShortest) != Integer.MAX_VALUE && 
 				(stops.get(nextShortest) + 1) < (stops.get(adj.getName()))) {
 					stops.replace(adj.getName(), stops.get(nextShortest) + 1); // Update dist to reflect new num of stops to this shortest path
-					parents.replace(adj.getName(), nextShortest); // Update parent to be new num of stops in shortest path to this station
+					parents.replace(adj.getName(), nextShortest); // Update parent to be new min stops in shortest path to this station
 					// Once we get to the destination, stop and return
 					if (parents.get(adj.getName()).equals(destination)) {
 						ArrayList<String> temp = getStops(parents, origin, destination);
@@ -456,7 +456,7 @@ public class RailNetwork {
 				if (!stationList.get(adj.getName()).isMarked()&& stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && stops.get(nextShortest) != Integer.MAX_VALUE && 
 				(stops.get(nextShortest) + 1) < (stops.get(adj.getName()))) {
 					stops.replace(adj.getName(), stops.get(nextShortest) + 1); // Update dist to reflect new num of stops to this shortest path
-					parents.replace(adj.getName(), nextShortest); // Update parent to be new num of stops in shortest path to this station
+					parents.replace(adj.getName(), nextShortest); // Update parent to be new min stops in shortest path to this station
 					// Once we get to the destination, stop and return
 					if (parents.get(adj.getName()).equals(destination)) {
 						ArrayList<String> temp = getStops(parents, origin, destination);
