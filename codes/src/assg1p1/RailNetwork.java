@@ -205,7 +205,7 @@ public class RailNetwork {
   
             // Updating distance of adjacent stations to picked station
             for (Station adj : stationList.get(nextShortest).getAdjacentStations().keySet()) { 
-                if (!stationList.get(adj.getName()).isMarked()&& stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && dist.get(nextShortest) != Integer.MAX_VALUE && (dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
+                if (!stationList.get(adj.getName()).isMarked() && stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && dist.get(nextShortest) != Integer.MAX_VALUE && (dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
 					dist.replace(adj.getName(), dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)); // Update dist to reflect new shortest distance to this path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be the new best path to this station
 					// Once we get to the destination, stop and return
@@ -298,7 +298,7 @@ public class RailNetwork {
 				if (failures.contains(adj.getName())) {
 					continue;
 				}
-                if (!stationList.get(adj.getName()).isMarked()&& stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && dist.get(nextShortest) != Integer.MAX_VALUE && (dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
+                if (!stationList.get(adj.getName()).isMarked() && stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && dist.get(nextShortest) != Integer.MAX_VALUE && (dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
 					dist.replace(adj.getName(), dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)); // Update dist to reflect new shortest distance to this path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be the new best path to this station
 					// Once we get to the destination, stop and return
@@ -371,8 +371,7 @@ public class RailNetwork {
   
             // Updating distance of adjacent stations to picked station
             for (Station adj : stationList.get(nextShortest).getAdjacentStations().keySet()) { 
-				if (!stationList.get(adj.getName()).isMarked()&& stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && stops.get(nextShortest) != Integer.MAX_VALUE && 
-				(stops.get(nextShortest) + 1) < (stops.get(adj.getName()))) {
+				if (!stationList.get(adj.getName()).isMarked() && stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && stops.get(nextShortest) != Integer.MAX_VALUE && (stops.get(nextShortest) + 1) < (stops.get(adj.getName()))) {
 					stops.replace(adj.getName(), stops.get(nextShortest) + 1); // Update dist to reflect new num of stops to this shortest path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be new min stops in shortest path to this station
 					// Once we get to the destination, stop and return
@@ -454,7 +453,7 @@ public class RailNetwork {
 				if (failures.contains(adj.getName())) {
 					continue;
 				}
-				if (!stationList.get(adj.getName()).isMarked()&& stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && stops.get(nextShortest) != Integer.MAX_VALUE && 
+				if (!stationList.get(adj.getName()).isMarked() && stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && stops.get(nextShortest) != Integer.MAX_VALUE && 
 				(stops.get(nextShortest) + 1) < (stops.get(adj.getName()))) {
 					stops.replace(adj.getName(), stops.get(nextShortest) + 1); // Update dist to reflect new num of stops to this shortest path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be new min stops in shortest path to this station
