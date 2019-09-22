@@ -177,42 +177,59 @@ public class RailNetwork {
 			return ans;
 		}
 		
-		// my code here
-		  
-		for (String s : stationList.keySet()) {
-			stationList.get(s).setUnmarked();
-		}
-		
-		currentList = new ArrayList<String>(); // reset
-		
-		ArrayList<String> pathList = new ArrayList<>(); 
-        pathList.add(origin); 
-		
-		getPath(origin, destination, pathList); 
-        return currentList;
-	}
-	
-	// Helper method to find best path from origin -> destination.
-	private void getPath(String origin, String destination, ArrayList<String> localPathList) {  
-		stationList.get(origin).setMarked();
-		
-		if (origin.equals(destination)) { 
-			if (findTotalDistance(localPathList) < findTotalDistance(currentList) || currentList.isEmpty()) {
-				currentList = new ArrayList<>(localPathList);
+		// === my code here ===
+
+		// Integer is the shortest distance to String
+		HashMap<String, Integer> dist = new HashMap<>();
+  
+        // Boolean is true if String is included in shortest path.
+        HashMap<String,Boolean> sptSet = new HashMap<>(); 
+  
+        // Initialize all distances as INFINITE and stpSet[] as false 
+        for (String s : stationList.keySet()) { 
+            dist.put(s, Integer.MAX_VALUE);
+            sptSet.put(s, false);
+        } 
+  
+        // Distance of source vertex from itself is always 0 
+        dist.replace(origin, 0);
+  
+        // Find shortest path for all vertices 
+        for (String s : stationList.keySet()) { 
+            // Pick the minimum distance vertex from the set of vertices 
+            // not yet processed. u is always equal to src in first 
+			// iteration. 
+			
+			int min = Integer.MAX_VALUE;
+			String u = ""; 
+  
+			for (String v : stationList.keySet()) {
+				if (sptSet.get(v) == false && dist.get(v) <= min) { 
+					min = dist.get(v); 
+					u = v; 
+				} 
 			}
-			stationList.get(origin).setUnmarked();
-			return; 
-		} 
-		
-		for (Station i : stationList.get(origin).getAdjacentStations().keySet()) { 
-			if (!stationList.get(i.getName()).isMarked()) {
-				localPathList.add(i.getName()); 
-				getPath(i.getName(), destination, localPathList); 
-				localPathList.remove(i.getName()); 
-			} 
-		} 
-		stationList.get(origin).setUnmarked();
-	} 
+  
+            // Mark the picked vertex as processed 
+            sptSet.replace(u, true);
+  
+            // Update dist value of the adjacent vertices of the 
+            // picked vertex. 
+            for (Station adj : stationList.get(u).getAdjacentStations().keySet()) { 
+                // Update dist[v] only if is not in sptSet, there is an 
+                // edge from u to v, and total weight of path from src to 
+				// v through u is smaller than current value of dist[v] 
+                if (!sptSet.get(adj.getName()) && stationList.get(u).getAdjacentStations().containsKey(adj) && dist.get(u) != Integer.MAX_VALUE && (dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
+					System.out.println("I MADE IT");
+					dist.replace(adj.getName(), dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)); 
+				}
+			}
+        } 
+
+		System.out.println(dist.get(destination));
+		System.out.println(sptSet);
+		return null;
+	}
 
 	/**
 	 * The method finds the shortest route (in terms of distance travelled) 
