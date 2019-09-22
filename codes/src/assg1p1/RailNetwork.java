@@ -190,7 +190,7 @@ public class RailNetwork {
         // Distance of origin to itself is always 0 
         dist.replace(origin, 0);
 		
-        for (String s : stationList.keySet()) { 
+        for (int i = 0; i < stationList.size(); i++) { 
             int min = Integer.MAX_VALUE;
 			String nextShortest = null; 
   
@@ -280,7 +280,7 @@ public class RailNetwork {
         // Distance of origin to itself is always 0 
         dist.replace(origin, 0);
 		
-        for (String s : stationList.keySet()) { 
+        for (int i = 0; i < stationList.size(); i++) { 
             int min = Integer.MAX_VALUE;
 			String nextShortest = null; 
   
