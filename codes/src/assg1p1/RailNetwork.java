@@ -267,44 +267,51 @@ public class RailNetwork {
 			return ans;
 		}
 		
-		for (String s : stationList.keySet()) {
+		HashMap<String, Integer> dist = new HashMap<>(); // Value is shortest distance from Key to d
+		HashMap<String, String> parents = new HashMap<>(); // Value is the closest station to the Key (in direction o -> d)
+  
+		// Initialisation of values
+        for (String s : stationList.keySet()) { 
+            dist.put(s, Integer.MAX_VALUE);
 			stationList.get(s).setUnmarked();
-		}
+			parents.put(s, "");
+        } 
+  
+        // Distance of origin to itself is always 0 
+        dist.replace(origin, 0);
 		
-		currentList = new ArrayList<String>();
-		ArrayList<String> pathList = new ArrayList<>(); 
-        pathList.add(origin); 
-        getPathF(origin, destination, failures, pathList); 
-        return currentList;
-	}
-	
-	// Helper method to find all paths from origin -> destination.
-	private void getPathF(String u, String d, TreeSet<String> f, ArrayList<String> localPathList) {  
-		stationList.get(u).setMarked();
-		
-		if (u.equals(d)) { 
-			boolean contains = false;
-			for (String fail : f) {
-				if (localPathList.contains(fail)) {
-					contains = true;
+        for (String s : stationList.keySet()) { 
+            int min = Integer.MAX_VALUE;
+			String nextShortest = null; 
+  
+			// Find next best station in terms of distance
+			for (String possibleStation : stationList.keySet()) {
+				if (!stationList.get(possibleStation).isMarked() && dist.get(possibleStation) <= min) { 
+					min = dist.get(possibleStation); 
+					nextShortest = possibleStation; 
+				} 
+			} stationList.get(nextShortest).setMarked();
+  
+            // Updating distance of adjacent stations to picked station
+            for (Station adj : stationList.get(nextShortest).getAdjacentStations().keySet()) { 
+				if (failures.contains(adj.getName())) {
+					continue;
+				}
+                if (!stationList.get(adj.getName()).isMarked()&& stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && dist.get(nextShortest) != Integer.MAX_VALUE && (dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
+					dist.replace(adj.getName(), dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)); // Update dist to reflect new shortest distance to this path
+					parents.replace(adj.getName(), nextShortest); // Update parent to be the new best path to this station
+					// Once we get to the destination, stop and return
+					if (parents.get(adj.getName()).equals(destination)) {
+						ArrayList<String> temp = getStops(parents, origin, destination);
+						return temp;
+					}
 				}
 			}
-			if (contains == false && (findTotalDistance(localPathList) < findTotalDistance(currentList) || currentList.isEmpty())) {
-				currentList = new ArrayList<>(localPathList);
-			}
-			stationList.get(u).setUnmarked();
-			return; 
-		} 
+		}
 		
-		for (Station i : stationList.get(u).getAdjacentStations().keySet()) { 
-			if (!stationList.get(i.getName()).isMarked()) {
-				localPathList.add(i.getName()); 
-				getPathF(i.getName(), d, f, localPathList); 
-				localPathList.remove(i.getName()); 
-			} 
-		} 
-		stationList.get(u).setUnmarked();
-	} 
+		// If don't find anything, return empty ArrayList.
+		return new ArrayList<>();
+	}
 	
 	/**
 	 * The method finds the shortest route (in terms of number of stops)
