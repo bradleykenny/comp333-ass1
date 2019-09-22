@@ -8,12 +8,10 @@ public class RailNetwork {
 
 	//private final double THRESHOLD = 0.000001;
 	
-	private TreeMap<String,Station> stationList;	
-	private ArrayList<String> currentList;
+	private TreeMap<String,Station> stationList;
 	
 	public RailNetwork(String trainData, String connectionData) {
 		stationList = new TreeMap<>();
-		currentList = new ArrayList<>();
 		
 		try {
 			readStationData(trainData);
@@ -23,16 +21,19 @@ public class RailNetwork {
 			System.out.println("Exception encountered: " + e);
 		}
 	}
-	
+
+	// !!!!!!! DELETE THIS BEFORE SUBMITTING !!!!!!!
 	public static void main(String[] args) {
 		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
 		
-		System.out.println("\n== ROUTE CALCULATIONS ==\nHornsby-> Chatswood\n" + rn.routeMinDistance("Wolli Creek", "Town Hall"));
+		System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nHornsby-> Chatswood\n" + rn.routeMinDistance("Hornsby", "Chatswood"));
 		
 		TreeSet<String> failures = new TreeSet<>();
 		failures.add("Sutherland");
+		System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nWaterfall -> Cronulla");
 		System.out.println(rn.routeMinDistance("Waterfall", "Cronulla", failures));
 		
+		System.out.println("\n== ROUTE CALCULATIONS [STOP] ==\nRichmond -> Central");
 		System.out.println(rn.routeMinStop("Richmond", "Central"));
 	}
 	
