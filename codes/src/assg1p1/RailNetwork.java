@@ -27,7 +27,7 @@ public class RailNetwork {
 	public static void main(String[] args) {
 		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
 		
-		System.out.println("\n== ROUTE CALCULATIONS ==\nHornsby-> Chatswood\n" + rn.routeMinDistance("Hornsby", "Chatswood"));
+		System.out.println("\n== ROUTE CALCULATIONS ==\nHornsby-> Chatswood\n" + rn.routeMinDistance("Wolli Creek", "Town Hall"));
 		
 		TreeSet<String> failures = new TreeSet<>();
 		failures.add("Sutherland");
@@ -176,24 +176,24 @@ public class RailNetwork {
 			ans.add(origin);
 			return ans;
 		}
-		
-		// === my code here ===
 
 		// Integer is the shortest distance to String
 		HashMap<String, Integer> dist = new HashMap<>();
   
         // Boolean is true if String is included in shortest path.
-        HashMap<String,Boolean> sptSet = new HashMap<>(); 
+		HashMap<String,Boolean> sptSet = new HashMap<>(); 
+		HashMap<String, String> parents = new HashMap<>();
   
         // Initialize all distances as INFINITE and stpSet[] as false 
         for (String s : stationList.keySet()) { 
             dist.put(s, Integer.MAX_VALUE);
-            sptSet.put(s, false);
+			sptSet.put(s, false);
+			parents.put(s, "");
         } 
   
         // Distance of source vertex from itself is always 0 
         dist.replace(origin, 0);
-  
+		
         // Find shortest path for all vertices 
         for (String s : stationList.keySet()) { 
             // Pick the minimum distance vertex from the set of vertices 
@@ -220,15 +220,31 @@ public class RailNetwork {
                 // edge from u to v, and total weight of path from src to 
 				// v through u is smaller than current value of dist[v] 
                 if (!sptSet.get(adj.getName()) && stationList.get(u).getAdjacentStations().containsKey(adj) && dist.get(u) != Integer.MAX_VALUE && (dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
-					System.out.println("I MADE IT");
 					dist.replace(adj.getName(), dist.get(u) + stationList.get(u).getAdjacentStations().get(adj)); 
+					parents.replace(adj.getName(), u);
+					if (parents.get(adj.getName()).equals(destination)) {
+						ArrayList<String> temp = getStops(parents, origin, destination);
+						return temp;
+					}
 				}
 			}
         } 
 
-		System.out.println(dist.get(destination));
-		System.out.println(sptSet);
-		return null;
+
+		return new ArrayList<>();
+	}
+
+
+	// helper method to get all stops in the parents arraylist
+	public ArrayList<String> getStops(HashMap<String, String> parents, String origin, String destination) {
+		ArrayList<String> temp = new ArrayList<>();
+		temp.add(destination);
+		String curr = parents.get(destination);
+		while (!curr.equals(origin)) {
+			temp.add(0, curr);
+			curr = parents.get(curr);
+		} temp.add(0, curr);
+		return temp;
 	}
 
 	/**
