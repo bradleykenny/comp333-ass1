@@ -8,12 +8,14 @@ public class RailNetwork {
 
 	//private final double THRESHOLD = 0.000001;
 	
-	private static TreeMap<String,Station> stationList;
-	private HashMap<ArrayList<String>, Integer> lookup;
+	private TreeMap<String,Station> stationList;
+	private HashMap<ArrayList<String>, Integer> lookupCost;
+	private HashMap<ArrayList<String>, Integer> lookupSol;
 	
 	public RailNetwork(String trainData, String connectionData) {
 		stationList = new TreeMap<>();
-		lookup = new HashMap<>();
+		lookupCost = new HashMap<>();
+		lookupSol = new HashMap<>();
 		
 		try {
 			readStationData(trainData);
@@ -22,21 +24,6 @@ public class RailNetwork {
 		catch (IOException e) {
 			System.out.println("Exception encountered: " + e);
 		}
-	}
-
-	// !!!!!!! DELETE THIS BEFORE SUBMITTING !!!!!!!
-	public static void main(String[] args) {
-		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
-		
-		System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nBlacktown-> Parramatta\n" + rn.routeMinDistance("Central", "Richmond"));
-		
-		// TreeSet<String> failures = new TreeSet<>();
-		// failures.add("Sutherland");
-		// System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nWaterfall -> Cronulla");
-		// System.out.println(rn.routeMinDistance("Waterfall", "Cronulla", failures));
-		
-		// System.out.println("\n== ROUTE CALCULATIONS [STOP] ==\nRichmond -> Central");
-		// System.out.println(rn.routeMinStop("Richmond", "Central"));
 	}
 	
 	/**
@@ -515,18 +502,18 @@ public class RailNetwork {
 			int rec1 = Integer.MAX_VALUE;
 			int rec2 = Integer.MAX_VALUE;
 			
-			if (lookup.containsKey(temp1)) {
-				rec1 = lookup.get(temp1);
+			if (lookupCost.containsKey(temp1)) {
+				rec1 = lookupCost.get(temp1);
 			} else {
 				rec1 = optimalScanCost(temp1);
-				lookup.put(temp1, rec1);
+				lookupCost.put(temp1, rec1);
 			}
 
-			if (lookup.containsKey(temp2)) {
-				rec2 = lookup.get(temp2);
+			if (lookupCost.containsKey(temp2)) {
+				rec2 = lookupCost.get(temp2);
 			} else {
 				rec2 = optimalScanCost(temp2);
-				lookup.put(temp2, rec2);
+				lookupCost.put(temp2, rec2);
 			}
 			
 			min_val = Math.min(min_val, findTotalDistance(route) + rec1 + rec2);
@@ -547,13 +534,31 @@ public class RailNetwork {
 	 * @return
 	 */
 	public ArrayList<String> optimalScanSolution(ArrayList<String> route){
-		if (route == null || route.size() <= 2)
+		if (route == null || route.size() <= 2) {
 			return new ArrayList<String>();
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
+		}
+
+		int min_val = Integer.MAX_VALUE;
+		ArrayList<String> temp = new ArrayList<String>();
+		int marker = 0;
 		
-		return null;
+		for (int i = 1; i < route.size() - 1; i++) {
+			ArrayList<String> temp1 = new ArrayList<>(route.subList(0, i+1));
+			ArrayList<String> temp2 = new ArrayList<>(route.subList(i, route.size()));
+			
+			ArrayList<String> rec1 = optimalScanSolution(temp1);
+			ArrayList<String> rec2 = optimalScanSolution(temp2);
+			
+			if (min_val > findTotalDistance(temp1) + findTotalDistance(temp2)) {
+				min_val = findTotalDistance(temp1) + findTotalDistance(temp2);
+				temp = new ArrayList<>();
+				marker = i;
+			}
+		}
+
+		temp.add(route.get(marker));
+		lookupSol.put(temp, min_val);
+		System.out.println(temp);
+        return temp;
 	}
-	
 }
