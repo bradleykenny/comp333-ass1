@@ -8,11 +8,12 @@ public class RailNetwork {
 
 	//private final double THRESHOLD = 0.000001;
 	
-	private TreeMap<String,Station> stationList;
-	private HashMap<Station, HashMap<Station, Integer>> lookup;
+	private static TreeMap<String,Station> stationList;
+	private HashMap<ArrayList<String>, Integer> lookup;
 	
 	public RailNetwork(String trainData, String connectionData) {
 		stationList = new TreeMap<>();
+		lookup = new HashMap<>();
 		
 		try {
 			readStationData(trainData);
@@ -27,18 +28,15 @@ public class RailNetwork {
 	public static void main(String[] args) {
 		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
 		
-		System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nBlacktown-> Parramatta\n" + rn.routeMinDistance("Blacktown", "Parramatta"));
+		System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nBlacktown-> Parramatta\n" + rn.routeMinDistance("Central", "Richmond"));
 		
-		TreeSet<String> failures = new TreeSet<>();
-		failures.add("Sutherland");
-		System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nWaterfall -> Cronulla");
-		System.out.println(rn.routeMinDistance("Waterfall", "Cronulla", failures));
+		// TreeSet<String> failures = new TreeSet<>();
+		// failures.add("Sutherland");
+		// System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nWaterfall -> Cronulla");
+		// System.out.println(rn.routeMinDistance("Waterfall", "Cronulla", failures));
 		
-		System.out.println("\n== ROUTE CALCULATIONS [STOP] ==\nRichmond -> Central");
-		System.out.println(rn.routeMinStop("Richmond", "Central"));
-
-		System.out.println("\n" + rn.optimalScanCost(rn.routeMinDistance("Parramatta", "Blacktown")));
-		System.out.println("= 29313");
+		// System.out.println("\n== ROUTE CALCULATIONS [STOP] ==\nRichmond -> Central");
+		// System.out.println(rn.routeMinStop("Richmond", "Central"));
 	}
 	
 	/**
@@ -213,7 +211,7 @@ public class RailNetwork {
 					dist.replace(adj.getName(), dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)); // Update dist to reflect new shortest distance to this path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be the new best path to this station
 					// Once we get to the destination, stop and return
-					if (parents.get(adj.getName()).equals(destination)) {
+					if (adj.getName().equals(destination)) {
 						ArrayList<String> temp = getStops(parents, origin, destination);
 						return temp;
 					}
@@ -306,7 +304,7 @@ public class RailNetwork {
 					dist.replace(adj.getName(), dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)); // Update dist to reflect new shortest distance to this path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be the new best path to this station
 					// Once we get to the destination, stop and return
-					if (parents.get(adj.getName()).equals(destination)) {
+					if (adj.getName().equals(destination)) {
 						ArrayList<String> temp = getStops(parents, origin, destination);
 						return temp;
 					}
@@ -379,7 +377,7 @@ public class RailNetwork {
 					stops.replace(adj.getName(), stops.get(nextShortest) + 1); // Update dist to reflect new num of stops to this shortest path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be new min stops in shortest path to this station
 					// Once we get to the destination, stop and return
-					if (parents.get(adj.getName()).equals(destination)) {
+					if (adj.getName().equals(destination)) {
 						ArrayList<String> temp = getStops(parents, origin, destination);
 						return temp;
 					}
@@ -462,7 +460,7 @@ public class RailNetwork {
 					stops.replace(adj.getName(), stops.get(nextShortest) + 1); // Update dist to reflect new num of stops to this shortest path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be new min stops in shortest path to this station
 					// Once we get to the destination, stop and return
-					if (parents.get(adj.getName()).equals(destination)) {
+					if (adj.getName().equals(destination)) {
 						ArrayList<String> temp = getStops(parents, origin, destination);
 						return temp;
 					}
@@ -514,7 +512,24 @@ public class RailNetwork {
 		for (int i = 1; i < route.size() - 1; i++) {
 			ArrayList<String> temp1 = new ArrayList<>(route.subList(0, i+1));
 			ArrayList<String> temp2 = new ArrayList<>(route.subList(i, route.size()));
-			min_val = Math.min(min_val, findTotalDistance(route) + optimalScanCost(temp1) + optimalScanCost(temp2));
+			int rec1 = Integer.MAX_VALUE;
+			int rec2 = Integer.MAX_VALUE;
+			
+			if (lookup.containsKey(temp1)) {
+				rec1 = lookup.get(temp1);
+			} else {
+				rec1 = optimalScanCost(temp1);
+				lookup.put(temp1, rec1);
+			}
+
+			if (lookup.containsKey(temp2)) {
+				rec2 = lookup.get(temp2);
+			} else {
+				rec2 = optimalScanCost(temp2);
+				lookup.put(temp2, rec2);
+			}
+			
+			min_val = Math.min(min_val, findTotalDistance(route) + rec1 + rec2);
 		}
 
         return min_val;
