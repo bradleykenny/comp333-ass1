@@ -9,6 +9,7 @@ public class RailNetwork {
 	//private final double THRESHOLD = 0.000001;
 	
 	private TreeMap<String,Station> stationList;
+	private HashMap<Station, HashMap<Station, Integer>> lookup;
 	
 	public RailNetwork(String trainData, String connectionData) {
 		stationList = new TreeMap<>();
@@ -26,7 +27,7 @@ public class RailNetwork {
 	public static void main(String[] args) {
 		RailNetwork rn = new RailNetwork("src/data/station_data.csv", "src/data/adjacent_stations.csv");
 		
-		System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nHornsby-> Chatswood\n" + rn.routeMinDistance("Hornsby", "Chatswood"));
+		System.out.println("\n== ROUTE CALCULATIONS [DIST] ==\nBlacktown-> Parramatta\n" + rn.routeMinDistance("Blacktown", "Parramatta"));
 		
 		TreeSet<String> failures = new TreeSet<>();
 		failures.add("Sutherland");
@@ -35,6 +36,8 @@ public class RailNetwork {
 		
 		System.out.println("\n== ROUTE CALCULATIONS [STOP] ==\nRichmond -> Central");
 		System.out.println(rn.routeMinStop("Richmond", "Central"));
+
+		System.out.println("\n" + rn.optimalScanCost(rn.routeMinDistance("Blacktown", "Parramatta")));
 	}
 	
 	/**
@@ -483,7 +486,11 @@ public class RailNetwork {
 		String prev = "";
 		for (String s : path) {
 			if (!prev.isEmpty()) {
-				distance += stationList.get(prev).getAdjacentStations().get(stationList.get(s));
+				if (stationList.get(prev).getAdjacentStations().containsKey(stationList.get(s))) {
+					distance += stationList.get(prev).getAdjacentStations().get(stationList.get(s));
+				} else {
+					return -1;
+				}
 			} prev = s;
 		}
 		return distance;
@@ -501,16 +508,29 @@ public class RailNetwork {
 	 * @return		 the minimum cost of performing exhaustive scans
 	 */
 	public int optimalScanCost(ArrayList<String> route) {
-		if (route == null || route.size() <= 2)
+		if (route == null || route.size() <= 2) {
 			return 0;
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
+		}
 
-		 // do this with top down dp approach
-		 // -> like rod cutting
-		
-		return 0;
+		if (findTotalDistance(route) == -1) {
+			return 0;
+		}
+
+        int max_val = Integer.MAX_VALUE; 
+  
+        // Recursively cut the rod in different pieces and 
+        // compare different configurations 
+		for (int i = 0; i < route.size(); i++) {
+			int currPathDist = findTotalDistance(route);
+			ArrayList<String> temp = new ArrayList<>(route);
+			temp.remove(i);
+			int rec = optimalScanCost(temp);
+			if (rec != 0) {
+				currPathDist += optimalScanCost(temp);
+			} max_val = Math.min(max_val, currPathDist);
+		}
+  
+        return max_val; 
 	}
 	
 	/***
