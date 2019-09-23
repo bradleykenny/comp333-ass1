@@ -37,7 +37,8 @@ public class RailNetwork {
 		System.out.println("\n== ROUTE CALCULATIONS [STOP] ==\nRichmond -> Central");
 		System.out.println(rn.routeMinStop("Richmond", "Central"));
 
-		System.out.println("\n" + rn.optimalScanCost(rn.routeMinDistance("Blacktown", "Parramatta")));
+		System.out.println("\n" + rn.optimalScanCost(rn.routeMinDistance("Parramatta", "Blacktown")));
+		System.out.println("= 29313");
 	}
 	
 	/**
@@ -486,11 +487,7 @@ public class RailNetwork {
 		String prev = "";
 		for (String s : path) {
 			if (!prev.isEmpty()) {
-				if (stationList.get(prev).getAdjacentStations().containsKey(stationList.get(s))) {
-					distance += stationList.get(prev).getAdjacentStations().get(stationList.get(s));
-				} else {
-					return -1;
-				}
+				distance += stationList.get(prev).getAdjacentStations().get(stationList.get(s));
 			} prev = s;
 		}
 		return distance;
@@ -512,25 +509,15 @@ public class RailNetwork {
 			return 0;
 		}
 
-		if (findTotalDistance(route) == -1) {
-			return 0;
+		int min_val = Integer.MAX_VALUE;
+		
+		for (int i = 1; i < route.size() - 1; i++) {
+			ArrayList<String> temp1 = new ArrayList<>(route.subList(0, i+1));
+			ArrayList<String> temp2 = new ArrayList<>(route.subList(i, route.size()));
+			min_val = Math.min(min_val, findTotalDistance(route) + optimalScanCost(temp1) + optimalScanCost(temp2));
 		}
 
-        int max_val = Integer.MAX_VALUE; 
-  
-        // Recursively cut the rod in different pieces and 
-        // compare different configurations 
-		for (int i = 0; i < route.size(); i++) {
-			int currPathDist = findTotalDistance(route);
-			ArrayList<String> temp = new ArrayList<>(route);
-			temp.remove(i);
-			int rec = optimalScanCost(temp);
-			if (rec != 0) {
-				currPathDist += optimalScanCost(temp);
-			} max_val = Math.min(max_val, currPathDist);
-		}
-  
-        return max_val; 
+        return min_val;
 	}
 	
 	/***
