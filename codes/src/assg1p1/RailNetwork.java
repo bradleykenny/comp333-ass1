@@ -537,25 +537,30 @@ public class RailNetwork {
 		}
 
 		int min_val = Integer.MAX_VALUE;
-		ArrayList<String> temp = new ArrayList<String>();
-		int marker = 0;
-
+		int index = -1;
+		ArrayList<String> temp = new ArrayList<>();
+		
 		for (int i = 1; i < route.size() - 1; i++) {
-			ArrayList<String> temp1 = new ArrayList<>(route.subList(0, i + 1));
+			ArrayList<String> temp1 = new ArrayList<>(route.subList(0, i+1));
 			ArrayList<String> temp2 = new ArrayList<>(route.subList(i, route.size()));
+			ArrayList<String> rec1 = optimalScanSolution(temp1);
+			ArrayList<String> rec2 = optimalScanSolution(temp2);
+			
+			if (min_val > findTotalDistance(route)) {
+				min_val = findTotalDistance(route);
+				index = i;
 
-			// ArrayList<String> rec1 = optimalScanSolution(temp1);
-			// ArrayList<String> rec2 = optimalScanSolution(temp2);
-
-			if (min_val > findTotalDistance(temp1) + findTotalDistance(temp2)) {
-				min_val = findTotalDistance(temp1) + findTotalDistance(temp2);
 				temp = new ArrayList<>();
-				marker = i;
+				if (rec1.size() > 2)
+					temp.addAll(rec1);
+				if (rec2.size() > 2)
+					temp.addAll(rec2);
 			}
 		}
 
-		temp.add(route.get(marker));
-		lookupSol.put(temp, min_val);
-		return temp;
-	}
+		if (index != -1) {
+			temp.add(route.get(index));
+		}
+        return temp;
+	} 
 }
