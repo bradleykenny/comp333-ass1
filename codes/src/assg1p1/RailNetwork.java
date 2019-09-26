@@ -543,19 +543,19 @@ public class RailNetwork {
 		for (int i = 1; i < route.size() - 1; i++) {
 			ArrayList<String> temp1 = new ArrayList<>(route.subList(0, i+1));
 			ArrayList<String> temp2 = new ArrayList<>(route.subList(i, route.size()));
-			ArrayList<String> rec1 = optimalScanSolution(temp1);
-			ArrayList<String> rec2 = optimalScanSolution(temp2);
-			
-			if (min_val > findTotalDistance(route)) {
-				min_val = findTotalDistance(route);
-				index = i;
-
-				temp = new ArrayList<>();
-				if (rec1.size() > 2)
-					temp.addAll(rec1);
-				if (rec2.size() > 2)
-					temp.addAll(rec2);
-			}
+//			ArrayList<String> rec1 = optimalScanSolution(temp1);
+//			ArrayList<String> rec2 = optimalScanSolution(temp2);
+//			
+//			if (min_val > findTotalDistance(route)) {
+//				min_val = findTotalDistance(route);
+//				index = i;
+//
+//				temp = new ArrayList<>();
+//				if (rec1.size() > 2)
+//					temp.addAll(rec1);
+//				if (rec2.size() > 2)
+//					temp.addAll(rec2);
+//			}
 		}
 
 		if (index != -1) {
