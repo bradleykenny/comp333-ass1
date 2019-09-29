@@ -29,12 +29,14 @@ public class RailNetworkAdvanced {
 	 * @param infile
 	 * @throws IOException
 	 */
-	public void readLinesData(String infile) throws IOException{
+	public void readLinesData(String infile) throws IOException {
+		// update for lines data: { Code, Line, Start, End, StationCount }
 		BufferedReader in = new BufferedReader(new FileReader(infile));
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
-
+		in.readLine(); // remove headers
+		while (in.ready()) {
+			String[] temp = in.readLine().split(",");
+			stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
+		} in.close();
 	}
 	/**
 	 * Reads the CSV file containing information about the stations and 
@@ -49,12 +51,13 @@ public class RailNetworkAdvanced {
 	 * @param infile	   the path to the file
 	 * @throws IOException if the file is not found
 	 */
-	public void readStationData(String infile) throws IOException{
+	public void readStationData(String infile) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(infile));
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
-		in.close();
+		in.readLine(); // remove headers
+		while (in.ready()) {
+			String[] temp = in.readLine().split(",");
+			stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
+		} in.close();
 	}
 	/**
 	 * Reads the CSV file containing information about connectivity between 
@@ -68,12 +71,15 @@ public class RailNetworkAdvanced {
 	 * @param infile	   the path to the file
 	 * @throws IOException if the file is not found
 	 */	
-	public void readConnectionData(String infile) throws IOException{
+	public void readConnectionData(String infile) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(infile));
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
-		in.close();
+		while (in.ready()) {
+			String[] temp = in.readLine().split(",");
+			int distance = computeDistance(temp[0], temp[1]);
+
+			stationList.get(temp[0]).addNeighbour(stationList.get(temp[1]), distance);
+			stationList.get(temp[1]).addNeighbour(stationList.get(temp[0]), distance);
+		} in.close();
 	}
 	
 	/**
@@ -164,16 +170,54 @@ public class RailNetworkAdvanced {
 		if (!stationList.containsKey(origin) || !stationList.containsKey(destination)) {
 			return new ArrayList<String>();
 		}
+		
 		if (origin.equals(destination)) {
 			ArrayList<String> ans = new ArrayList<String>();
 			ans.add(origin);
 			return ans;
 		}
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
-	
-		return null;
+
+		HashMap<String, Integer> dist = new HashMap<>(); // Value is shortest distance from Key to d
+		HashMap<String, String> parents = new HashMap<>(); // Value is the closest station to the Key (in direction o -> d)
+  
+		// Initialisation of values
+        for (String s : stationList.keySet()) { 
+            dist.put(s, Integer.MAX_VALUE);
+			stationList.get(s).setUnmarked();
+			parents.put(s, "");
+        } 
+  
+        // Distance of origin to itself is always 0 
+        dist.replace(origin, 0);
+		
+        for (int i = 0; i < stationList.size(); i++) { 
+            int min = Integer.MAX_VALUE;
+			String nextShortest = null; 
+  
+			// Find next best station in terms of distance
+			for (String possibleStation : stationList.keySet()) {
+				if (!stationList.get(possibleStation).isMarked() && dist.get(possibleStation) <= min) { 
+					min = dist.get(possibleStation); 
+					nextShortest = possibleStation; 
+				} 
+			} stationList.get(nextShortest).setMarked();
+  
+            // Updating distance of adjacent stations to picked station
+            for (Station adj : stationList.get(nextShortest).getAdjacentStations().keySet()) { 
+                if (!stationList.get(adj.getName()).isMarked() && stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && dist.get(nextShortest) != Integer.MAX_VALUE && (dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
+					dist.replace(adj.getName(), dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)); // Update dist to reflect new shortest distance to this path
+					parents.replace(adj.getName(), nextShortest); // Update parent to be the new best path to this station
+					// Once we get to the destination, stop and return
+					if (adj.getName().equals(destination)) {
+						ArrayList<String> temp = getStops(parents, origin, destination);
+						return temp;
+					}
+				}
+			}
+        } 
+
+		// If don't find anything, return empty ArrayList.
+		return new ArrayList<>();
 	}
 
 	
@@ -187,9 +231,12 @@ public class RailNetworkAdvanced {
 	 */
 	public int findTotalDistance(ArrayList<String> path) {
 		int distance = 0;
-		/*
-		 * INSERT YOUR CODE HERE
-		 */
+		String prev = "";
+		for (String s : path) {
+			if (!prev.isEmpty()) {
+				distance += stationList.get(prev).getAdjacentStations().get(stationList.get(s));
+			} prev = s;
+		}
 		return distance;
 	}
 	
