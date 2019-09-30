@@ -220,6 +220,18 @@ public class RailNetworkAdvanced {
 		return new ArrayList<>();
 	}
 
+	// Helper method to get all stops in the parents HashMap
+	public ArrayList<String> getStops(HashMap<String, String> parents, String origin, String destination) {
+		ArrayList<String> temp = new ArrayList<>();
+		temp.add(destination);
+		String curr = parents.get(destination);
+		while (!curr.equals(origin)) {
+			temp.add(0, curr);
+			curr = parents.get(curr);
+		} temp.add(0, curr);
+		return temp;
+	}
+
 	
 	/**
 	 * Given a route between two stations, compute the total distance 
