@@ -272,7 +272,9 @@ public class RailNetworkAdvanced {
 	 * @return	s			the ratio d1/d2 as explained above
 	 */
 	public double computeRatio(String origin, String destination) {
-		return 0.0;
+		double d1 = findTotalDistance(routeMinStop(origin, destination));
+		double d2 = computeDistance(origin, destination);
+		return d1/d2;
 	}
 	
 	
