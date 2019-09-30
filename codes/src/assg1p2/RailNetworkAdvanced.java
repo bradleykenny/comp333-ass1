@@ -261,7 +261,7 @@ public class RailNetworkAdvanced {
 	 * 
 	 * In other words, 
 	 * let d1 = distance of shortest route between the two stations as computed
-	 *          by the method routeMinStop() (from Stage 1).
+	 *          by the method routeMinDistance() (from Stage 1).
 	 * let d2 = distance between two stations as computed by the method
 	 *          computeDistance() 
 	 *          
@@ -272,7 +272,7 @@ public class RailNetworkAdvanced {
 	 * @return	s			the ratio d1/d2 as explained above
 	 */
 	public double computeRatio(String origin, String destination) {
-		double d1 = findTotalDistance(routeMinStop(origin, destination));
+		double d1 = findTotalDistance(routeMinDistance(origin, destination));
 		double d2 = computeDistance(origin, destination);
 		return d1/d2;
 	}
@@ -290,7 +290,29 @@ public class RailNetworkAdvanced {
 	 * @return a hashmap containing the ratios
 	 */
 	public HashMap<String,HashMap<String,Double>> computeAllRatio() {
-		return null;
+		HashMap<String, HashMap<String, Double>> allDistMap = new HashMap<>(); 
+		
+		for(Station i: stationList.values())
+		{
+			for(Station j: stationList.values())
+			{
+				HashMap<String, Double> allDistMap2 = new HashMap<>();
+				allDistMap2.put(j.getName(), computeRatio(i.getName(), j.getName()));
+				allDistMap.put(i.getName(), allDistMap2);
+				/*
+				if (!allDistMap.containsKey(i.getName()))
+				{
+					HashMap<String, Double> allDistMap2 = new HashMap<>();
+					allDistMap2.put(j.getName(), computeRatio(i.getName(), j.getName()));
+					allDistMap.put(i, allDistMap2);
+				} else{
+					allDistMap.get(i);
+				}
+				*/
+			}
+		}
+
+		return allDistMap;
 	}
 	
 	/**
@@ -321,7 +343,5 @@ public class RailNetworkAdvanced {
 		
 		return null;
 	}
-	
-	
 	
 }
