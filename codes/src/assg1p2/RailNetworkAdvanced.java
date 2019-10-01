@@ -312,6 +312,7 @@ public class RailNetworkAdvanced {
 					HashMap<String, Double> allDistMap2 = new HashMap<String, Double>();
 					// allDistMap2<Chatswood, ratio>
 					allDistMap.put(j.getName(), allDistMap2);
+					
 
 					// allDistMap<Roseville, <Chatswood, ratio>>
 					allDistMap.get(i.getName()).put(j.getName(), computeRatio(i.getName(), j.getName()));

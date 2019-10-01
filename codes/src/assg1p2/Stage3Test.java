@@ -79,8 +79,8 @@ public class Stage3Test {
 		Double actual = ans.get(origin).get(destination);
 		System.out.println(ans);
 		assertEquals(178,ans.size());
-		System.out.print("actual:" + actual);
-		System.out.print("Expected:" + expected);
+		System.out.println("actual:" + actual);
+		System.out.println("Expected:" + expected);
 		assertEquals(expected,actual,epsilon);
 	}
 
