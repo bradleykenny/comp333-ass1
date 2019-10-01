@@ -14,7 +14,7 @@ public class RailNetworkAdvanced {
 		stationList = new TreeMap<>();
 		
 		try {	
-			readLinesData(lineData);
+			//readLinesData(lineData);
 			readStationData(trainData);
 			readConnectionData(connectionData);
 		}
@@ -29,15 +29,15 @@ public class RailNetworkAdvanced {
 	 * @param infile
 	 * @throws IOException
 	 */
-	public void readLinesData(String infile) throws IOException {
-		// update for lines data: { Code, Line, Start, End, StationCount }
-		BufferedReader in = new BufferedReader(new FileReader(infile));
-		in.readLine(); // remove headers
-		while (in.ready()) {
-			String[] temp = in.readLine().split(",");
-			stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
-		} in.close();
-	}
+	// public void readLinesData(String infile) throws IOException {
+	// 	// update for lines data: { Code, Line, Start, End, StationCount }
+	// 	BufferedReader in = new BufferedReader(new FileReader(infile));
+	// 	in.readLine(); // remove headers
+	// 	while (in.ready()) {
+	// 		String[] temp = in.readLine().split(",");
+	// 		stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
+	// 	} in.close();
+	// }
 	/**
 	 * Reads the CSV file containing information about the stations and 
 	 * populate the TreeMap<String,Station> stationList. Each row of 
@@ -272,6 +272,7 @@ public class RailNetworkAdvanced {
 	 * @return	s			the ratio d1/d2 as explained above
 	 */
 	public double computeRatio(String origin, String destination) {
+
 		double d1 = findTotalDistance(routeMinDistance(origin, destination));
 		double d2 = computeDistance(origin, destination);
 		return d1/d2;
@@ -292,23 +293,32 @@ public class RailNetworkAdvanced {
 	public HashMap<String,HashMap<String,Double>> computeAllRatio() {
 		HashMap<String, HashMap<String, Double>> allDistMap = new HashMap<>(); 
 		
+		// there will be duplicity as get(i, j) will be the same as get(j, i)
+		// if j == i, 
+		// when we create a allDistMap for j, i; create for i, j?
 		for(Station i: stationList.values())
 		{
 			for(Station j: stationList.values())
 			{
-				HashMap<String, Double> allDistMap2 = new HashMap<>();
-				allDistMap2.put(j.getName(), computeRatio(i.getName(), j.getName()));
-				allDistMap.put(i.getName(), allDistMap2);
-				/*
-				if (!allDistMap.containsKey(i.getName()))
+				// Chatswood -> Roseville
+				// Station j is not found in main Map (allDistMap)
+				// := create j in mainMap
+				if(!allDistMap.containsKey(j.getName()))
 				{
+					// if allDistMap !contain Roseville
+					// create a sub map; insert (station j, ratio)
 					HashMap<String, Double> allDistMap2 = new HashMap<>();
+					// allDistMap2<Chatswood, ratio>
+					allDistMap2.put(i.getName(), computeRatio(j.getName(), i.getName()));
+					// allDistMap<Roseville, <Chatswood, ratio>>
+					allDistMap.put(j.getName(), allDistMap2);
+				} else { //Station j already exists in main Map
+					HashMap<String, Double> allDistMap2 = new HashMap<>();
+					// allDistMap2<Roseville, ratio>
 					allDistMap2.put(j.getName(), computeRatio(i.getName(), j.getName()));
-					allDistMap.put(i, allDistMap2);
-				} else{
-					allDistMap.get(i);
+					// allDistMap<Chatswood, <Roseville, ratio>>
+					allDistMap.put(i.getName(), allDistMap2);
 				}
-				*/
 			}
 		}
 
@@ -343,5 +353,5 @@ public class RailNetworkAdvanced {
 		
 		return null;
 	}
-	
+
 }
