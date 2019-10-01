@@ -77,8 +77,10 @@ public class Stage3Test {
 		HashMap<String,HashMap<String,Double>> ans = r.computeAllRatio();
 		Double expected = 1.097584920479088;
 		Double actual = ans.get(origin).get(destination);
-
+		System.out.println(ans);
 		assertEquals(178,ans.size());
+		System.out.print("actual:" + actual);
+		System.out.print("Expected:" + expected);
 		assertEquals(expected,actual,epsilon);
 	}
 

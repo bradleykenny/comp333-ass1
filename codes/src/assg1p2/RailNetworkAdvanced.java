@@ -293,7 +293,7 @@ public class RailNetworkAdvanced {
 	 * @return a hashmap containing the ratios
 	 */
 	public HashMap<String,HashMap<String,Double>> computeAllRatio() {
-		HashMap<String, HashMap<String, Double>> allDistMap = new HashMap<>(); 
+		HashMap<String, HashMap<String, Double>> allDistMap = new HashMap<String, HashMap<String, Double>>(); 
 		
 		// there will be duplicity as get(i, j) will be the same as get(j, i)
 		// if j == i, 
@@ -309,20 +309,27 @@ public class RailNetworkAdvanced {
 				{
 					// if allDistMap !contain Roseville
 					// create a sub map; insert (station j, ratio)
-					HashMap<String, Double> allDistMap2 = new HashMap<>();
+					HashMap<String, Double> allDistMap2 = new HashMap<String, Double>();
 					// allDistMap2<Chatswood, ratio>
-					allDistMap2.put(i.getName(), computeRatio(j.getName(), i.getName()));
-					// allDistMap<Roseville, <Chatswood, ratio>>
 					allDistMap.put(j.getName(), allDistMap2);
-				} else { //Station j already exists in main Map
-					HashMap<String, Double> allDistMap2 = new HashMap<>();
+
+					// allDistMap<Roseville, <Chatswood, ratio>>
+					allDistMap.get(i.getName()).put(j.getName(), computeRatio(i.getName(), j.getName()));
+					System.out.println("Here");
+				} 
+				else { //Station j already exists in main Map
+					HashMap<String, Double> allDistMap2 = new HashMap<String, Double>();
+					System.out.println("Here3");
+
 					// allDistMap2<Roseville, ratio>
-					allDistMap2.put(j.getName(), computeRatio(i.getName(), j.getName()));
 					// allDistMap<Chatswood, <Roseville, ratio>>
-					allDistMap.put(i.getName(), allDistMap2);
+					allDistMap.get(i.getName()).put(j.getName(), computeRatio(i.getName(), j.getName()));
+					
 				}
 			}
 		}
+		System.out.println(allDistMap.get("Parramatta"));
+		System.out.println(allDistMap.get("Parramatta").get("Strathfield"));
 
 		return allDistMap;
 	}
