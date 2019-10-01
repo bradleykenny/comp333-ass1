@@ -14,7 +14,7 @@ public class RailNetworkAdvanced {
 		stationList = new TreeMap<>();
 		
 		try {	
-			//readLinesData(lineData);
+			readLinesData(lineData);
 			readStationData(trainData);
 			readConnectionData(connectionData);
 		}
@@ -29,15 +29,17 @@ public class RailNetworkAdvanced {
 	 * @param infile
 	 * @throws IOException
 	 */
-	// public void readLinesData(String infile) throws IOException {
-	// 	// update for lines data: { Code, Line, Start, End, StationCount }
-	// 	BufferedReader in = new BufferedReader(new FileReader(infile));
-	// 	in.readLine(); // remove headers
-	// 	while (in.ready()) {
-	// 		String[] temp = in.readLine().split(",");
-	// 		stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
-	// 	} in.close();
-	// }
+
+	public void readLinesData(String infile) throws IOException {
+		// update for lines data: { Code, Line, Start, End, StationCount }
+		BufferedReader in = new BufferedReader(new FileReader(infile));
+		in.readLine(); // remove headers
+		while (in.ready()) {
+			// to do
+			in.readLine();
+		} in.close();
+	}
+
 	/**
 	 * Reads the CSV file containing information about the stations and 
 	 * populate the TreeMap<String,Station> stationList. Each row of 
