@@ -277,9 +277,9 @@ public class RailNetworkAdvanced {
 	public double computeRatio(String origin, String destination) {		
 		String name;
 		if (origin.charAt(0) > destination.charAt(0)) {
-			name = origin + "-" + destination;
-		} else {
 			name = destination + "-" + origin;
+		} else {
+			name = origin + "-" + destination;
 		}
 
 		if (!ratioLookup.containsKey(name)) {
@@ -323,10 +323,11 @@ public class RailNetworkAdvanced {
 					}
 					
 					double ratio = computeRatio(i, j);
+					
 					if (!allDistMap.containsKey(j)) {	
 						HashMap<String, Double> jToI = new HashMap<>();
 						jToI.put(i, ratio);
-						allDistMap.put(j, jToI);	
+						allDistMap.put(j, jToI);
 					} else { //Station j already exists in main Map
 						allDistMap.get(j).put(i, ratio);
 					}
@@ -334,15 +335,12 @@ public class RailNetworkAdvanced {
 					if (!allDistMap.containsKey(i)) {
 						HashMap<String, Double> iToJ = new HashMap<>();
 						iToJ.put(j, ratio);
-					}
-					else {
+					} else {
 						allDistMap.get(i).put(j, ratio);
 					}
 				}
 			}
 		}
-		System.out.println(allDistMap.get("Parramatta"));
-		System.out.println(allDistMap.get("Parramatta").get("Strathfield"));
 
 		return allDistMap;
 	}
