@@ -310,33 +310,32 @@ public class RailNetworkAdvanced {
 		// there will be duplicity as get(i, j) will be the same as get(j, i)
 		// if j == i, 
 		// when we create a allDistMap for j, i; create for i, j?
-		for(String i: stationList.keySet())
-		{	
-			for(String j: stationList.keySet())
-			{
-				if(!i.equals(j)){
+		for (String i: stationList.keySet()) {	
+			for (String j: stationList.keySet()) {
+				if (!i.equals(j)) {
 					// Chatswood -> Roseville
 					// Station j is not found in main Map (allDistMap)
 					// := create j in mainMap
-					if(allDistMap.containsKey(i) && allDistMap.containsKey(j)){
-						if(allDistMap.get(i).containsKey(j)&&allDistMap.get(j).containsKey(i)){
+					if (allDistMap.containsKey(i) && allDistMap.containsKey(j)) {
+						if (allDistMap.get(i).containsKey(j) && allDistMap.get(j).containsKey(i)) {
 							continue;
 						}
 					}
+					
 					double ratio = computeRatio(i, j);
-					if(!allDistMap.containsKey(j))
-					{	
+					if (!allDistMap.containsKey(j)) {	
 						HashMap<String, Double> jToI = new HashMap<>();
 						jToI.put(i, ratio);
 						allDistMap.put(j, jToI);	
 					} else { //Station j already exists in main Map
 						allDistMap.get(j).put(i, ratio);
 					}
-					if(!allDistMap.containsKey(i)){
+					
+					if (!allDistMap.containsKey(i)) {
 						HashMap<String, Double> iToJ = new HashMap<>();
 						iToJ.put(j, ratio);
 					}
-					else{
+					else {
 						allDistMap.get(i).put(j, ratio);
 					}
 				}
