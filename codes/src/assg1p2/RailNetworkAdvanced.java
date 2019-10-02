@@ -293,7 +293,7 @@ public class RailNetworkAdvanced {
 	 * @return a hashmap containing the ratios
 	 */
 	public HashMap<String,HashMap<String,Double>> computeAllRatio() {
-		HashMap<String, HashMap<String, Double>> allDistMap = new HashMap<>(); 
+		HashMap<String, HashMap<String, Double>> allDistMap = new HashMap<String, HashMap<String, Double>>(); 
 		
 		// there will be duplicity as get(i, j) will be the same as get(j, i)
 		// if j == i, 
@@ -330,6 +330,8 @@ public class RailNetworkAdvanced {
 				}
 			}
 		}
+		System.out.println(allDistMap.get("Parramatta"));
+		System.out.println(allDistMap.get("Parramatta").get("Strathfield"));
 
 		return allDistMap;
 	}

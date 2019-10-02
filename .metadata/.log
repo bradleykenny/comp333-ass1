@@ -96,9 +96,15 @@ This warning can be switched off on the Team > Git > Confirmations and Warnings 
 
 !ENTRY org.eclipse.m2e.logback.appender 2 0 2019-09-30 22:21:42.297
 !MESSAGE Cannot run program "git" (in directory "\usr\bin"): CreateProcess error=2, The system cannot find the file specified
+<<<<<<< HEAD
 !SESSION 2019-10-01 14:56:53.307 -----------------------------------------------
 eclipse.buildId=4.12.0.I20190605-1800
 java.version=10
+=======
+!SESSION 2019-10-01 14:52:23.072 -----------------------------------------------
+eclipse.buildId=4.12.0.I20190605-1800
+java.version=12
+>>>>>>> fecdf198f59d44fa1edd72344f67182ae345f0b1
 java.vendor=Oracle Corporation
 BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_AU
 Framework arguments:  -product org.eclipse.epp.package.java.product
