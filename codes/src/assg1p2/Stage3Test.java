@@ -68,7 +68,7 @@ public class Stage3Test {
 		assertEquals(expected,actual,epsilon);
 	}
 	
-	@Test//(timeout=10000)
+	@Test(timeout=25000)
 	public void computeAllRatioTest1() {
 
 		String origin = "Parramatta";
@@ -77,7 +77,7 @@ public class Stage3Test {
 		HashMap<String,HashMap<String,Double>> ans = r.computeAllRatio();
 		Double expected = 1.097584920479088;
 		Double actual = ans.get(origin).get(destination);
-
+		System.out.print(ans.size());
 		assertEquals(178,ans.size());
 		assertEquals(expected,actual,epsilon);
 	}
