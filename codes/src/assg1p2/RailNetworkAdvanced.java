@@ -193,7 +193,7 @@ public class RailNetworkAdvanced {
         // Distance of origin to itself is always 0 
         dist.replace(origin, 0);
 		
-        for (int i = 0; i < stationList.size(); i++) { 
+        for (String s : stationList.keySet()) { 
             int min = Integer.MAX_VALUE;
 			String nextShortest = null; 
   
