@@ -9,12 +9,14 @@ import assg1p1.Station;
 public class RailNetworkAdvanced {
 
 	private TreeMap<String,Station> stationList;
+	private HashMap<String, Double> ratioLookup;
 	
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
+		ratioLookup = new HashMap<>();
 		
 		try {	
-			readLinesData(lineData);
+			// readLinesData(lineData);
 			readStationData(trainData);
 			readConnectionData(connectionData);
 		}
@@ -35,7 +37,6 @@ public class RailNetworkAdvanced {
 		BufferedReader in = new BufferedReader(new FileReader(infile));
 		in.readLine(); // remove headers
 		while (in.ready()) {
-			// to do
 			in.readLine();
 		} in.close();
 	}
@@ -273,11 +274,22 @@ public class RailNetworkAdvanced {
 	 * @param destination 	the ending station
 	 * @return	s			the ratio d1/d2 as explained above
 	 */
-	public double computeRatio(String origin, String destination) {
+	public double computeRatio(String origin, String destination) {		
+		String name;
+		if (origin.charAt(0) > destination.charAt(0)) {
+			name = origin + "-" + destination;
+		} else {
+			name = destination + "-" + origin;
+		}
 
-		double d1 = findTotalDistance(routeMinDistance(origin, destination));
-		double d2 = computeDistance(origin, destination);
-		return d1/d2;
+		if (!ratioLookup.containsKey(name)) {
+			double d1 = findTotalDistance(routeMinDistance(origin, destination));
+			double d2 = computeDistance(origin, destination);	
+			ratioLookup.put(name, d1/d2);
+			return d1 / d2;
+		} else {
+			return ratioLookup.get(name);
+		}
 	}
 	
 	
