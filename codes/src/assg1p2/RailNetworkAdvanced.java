@@ -283,18 +283,18 @@ public class RailNetworkAdvanced {
 			return 0;
 		}
 
-		if (routeLookup.size() == 0) {
-			routeLookup = routeMinDistance(origin, destination);
+		if (routeLookup.size() <= 0) {
+			routeLookup = new ArrayList<>(routeMinDistance(origin, destination));
 		}
 		
 		String name = getCombinedName(origin, destination);
 
 		if (!ratioLookup.containsKey(name)) {
-			double d1;
+			int d1;
 			if (!distLookup.containsKey(name)) {
 				d1 = findTotalDistance(routeLookup);
 				routeLookup.remove(routeLookup.size() - 1);
-				distLookup.put(name, (int)d1);
+				distLookup.put(name, d1);
 				if (routeLookup.size() > 0) {
 					computeRatio(origin, routeLookup.get(routeLookup.size() - 1));
 				}
@@ -302,6 +302,7 @@ public class RailNetworkAdvanced {
 				d1 = distLookup.get(name);
 			}
 			double d2 = computeDistance(origin, destination);
+			System.out.println(name + " " + d1/d2);
 			ratioLookup.put(name, d1/d2);
 			return d1 / d2;
 		} else {
@@ -372,6 +373,7 @@ public class RailNetworkAdvanced {
 			}
 		}
 
+		System.out.println(ratioLookup);
 		return allDistMap;
 	}
 	
