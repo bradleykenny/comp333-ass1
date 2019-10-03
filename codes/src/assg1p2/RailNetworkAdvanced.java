@@ -11,11 +11,13 @@ public class RailNetworkAdvanced {
 	private TreeMap<String,Station> stationList;
 	private HashMap<String, Double> ratioLookup;
 	private HashMap<String, Integer> distLookup;
-	
+	private ArrayList<String> routeLookup;
+
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
 		ratioLookup = new HashMap<>();
 		distLookup = new HashMap<>();
+		routeLookup = new ArrayList<>();
 		
 		try {	
 			// readLinesData(lineData);
@@ -280,19 +282,22 @@ public class RailNetworkAdvanced {
 		if (origin.equals(destination)) {
 			return 0;
 		}
-		
-		String name;
-		if (origin.charAt(0) > destination.charAt(0)) {
-			name = destination + "-" + origin;
-		} else {
-			name = origin + "-" + destination;
+
+		if (routeLookup.size() == 0) {
+			routeLookup = routeMinDistance(origin, destination);
 		}
+		
+		String name = getCombinedName(origin, destination);
 
 		if (!ratioLookup.containsKey(name)) {
 			double d1;
 			if (!distLookup.containsKey(name)) {
-				d1 = findTotalDistance(routeMinDistance(origin, destination));
+				d1 = findTotalDistance(routeLookup);
+				routeLookup.remove(routeLookup.size() - 1);
 				distLookup.put(name, (int)d1);
+				if (routeLookup.size() > 0) {
+					computeRatio(origin, routeLookup.get(routeLookup.size() - 1));
+				}
 			} else {
 				d1 = distLookup.get(name);
 			}
@@ -302,6 +307,17 @@ public class RailNetworkAdvanced {
 		} else {
 			return ratioLookup.get(name);
 		}
+	}
+
+	public String getCombinedName(String n1, String n2) {
+		String name;
+		if (n1.charAt(0) > n2.charAt(0)) {
+			name = n2 + "-" + n1;
+		} else {
+			name = n1 + "-" + n2;
+		} 
+		
+		return name;
 	}
 	
 	
@@ -322,6 +338,7 @@ public class RailNetworkAdvanced {
 		// there will be duplicity as get(i, j) will be the same as get(j, i)
 		// if j == i, 
 		// when we create a allDistMap for j, i; create for i, j?
+
 		for (String i: stationList.keySet()) {	
 			for (String j: stationList.keySet()) {
 				if (!i.equals(j)) {
@@ -333,8 +350,16 @@ public class RailNetworkAdvanced {
 							continue;
 						}
 					}
-					
+
 					double ratio = computeRatio(i, j);
+
+					if (!allDistMap.containsKey(i)) {
+						HashMap<String, Double> iToJ = new HashMap<>();
+						iToJ.put(j, ratio);
+						allDistMap.put(i, iToJ);
+					} else {
+						allDistMap.get(i).put(j, ratio);
+					}
 					
 					if (!allDistMap.containsKey(j)) {	
 						HashMap<String, Double> jToI = new HashMap<>();
@@ -342,13 +367,6 @@ public class RailNetworkAdvanced {
 						allDistMap.put(j, jToI);
 					} else { //Station j already exists in main Map
 						allDistMap.get(j).put(i, ratio);
-					}
-					
-					if (!allDistMap.containsKey(i)) {
-						HashMap<String, Double> iToJ = new HashMap<>();
-						iToJ.put(j, ratio);
-					} else {
-						allDistMap.get(i).put(j, ratio);
 					}
 				}
 			}
