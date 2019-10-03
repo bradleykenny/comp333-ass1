@@ -11,11 +11,13 @@ public class RailNetworkAdvanced {
 	private TreeMap<String,Station> stationList;
 	private HashMap<String, Double> ratioLookup;
 	private HashMap<String, Integer> distLookup;
+	private HashMap<String, String> routeLookup;
 	
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
 		ratioLookup = new HashMap<>();
 		distLookup = new HashMap<>();
+		routeLookup = new HashMap<>();
 		
 		try {	
 			// readLinesData(lineData);
@@ -212,13 +214,12 @@ public class RailNetworkAdvanced {
                 if (!stationList.get(adj.getName()).isMarked() && stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && dist.get(nextShortest) != Integer.MAX_VALUE && (dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)) < (dist.get(adj.getName()))) {
 					dist.replace(adj.getName(), dist.get(nextShortest) + stationList.get(nextShortest).getAdjacentStations().get(adj)); // Update dist to reflect new shortest distance to this path
 					parents.replace(adj.getName(), nextShortest); // Update parent to be the new best path to this station
-					// Once we get to the destination, stop and return
-					if (adj.getName().equals(destination)) {
-						ArrayList<String> temp = getStops(parents, origin, destination);
-						return temp;
-					}
 				}
 			}
+
+			ArrayList<String> temp = getStops(parents, origin, destination);
+			routeLookup = new HashMap<>(parents);
+			return temp;
         } 
 
 		// If don't find anything, return empty ArrayList.
