@@ -282,34 +282,48 @@ public class RailNetworkAdvanced {
 		if (origin.equals(destination)) {
 			return 0;
 		}
-
-		if (routeLookup.size() <= 0) {
-			routeLookup = new ArrayList<>(routeMinDistance(origin, destination));
-		}
-		
 		String name = getCombinedName(origin, destination);
+		if(!ratioLookup.containsKey(name)){
+			routeLookup = new ArrayList<>(routeMinDistance(origin, destination));
+			for(int i = 0; i<routeLookup.size(); i++){
+				List<String> subList = routeLookup.subList(i, routeLookup.size());
+				ArrayList<String> path = new ArrayList<>(subList);
+				mapRatios(path);
+			}
+		}
+		if(ratioLookup.containsKey(name))
+			return ratioLookup.get(name);
+		else
+			return (double) 0;
+	}
 
+	public void mapRatios(ArrayList<String> route){
+		if(route.size()<2){
+			return;
+		}
+		String head = route.get(0);
+		String tail = route.get(route.size()-1);
+		double d2 = computeDistance(head, tail);
+		String name = getCombinedName(head, tail);
+		
 		if (!ratioLookup.containsKey(name)) {
 			int d1;
 			if (!distLookup.containsKey(name)) {
-				d1 = findTotalDistance(routeLookup);
-				routeLookup.remove(routeLookup.size() - 1);
+				d1 = findTotalDistance(route);
+				route.remove(route.size() - 1);
 				distLookup.put(name, d1);
-				if (routeLookup.size() > 0) {
-					computeRatio(origin, routeLookup.get(routeLookup.size() - 1));
-				}
-			} else {
+			} 
+			else {
+				route.remove(route.size()-1);
 				d1 = distLookup.get(name);
 			}
-			double d2 = computeDistance(origin, destination);
-			System.out.println(name + " " + d1/d2);
 			ratioLookup.put(name, d1/d2);
-			return d1 / d2;
-		} else {
-			return ratioLookup.get(name);
 		}
+		else{
+			route.remove(route.size()-1);
+		}
+		mapRatios(route);
 	}
-
 	public String getCombinedName(String n1, String n2) {
 		String name;
 		if (n1.charAt(0) > n2.charAt(0)) {
@@ -373,7 +387,7 @@ public class RailNetworkAdvanced {
 			}
 		}
 
-		System.out.println(ratioLookup);
+		//System.out.println(ratioLookup);
 		return allDistMap;
 	}
 	
