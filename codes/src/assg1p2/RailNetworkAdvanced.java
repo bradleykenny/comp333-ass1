@@ -304,6 +304,7 @@ public class RailNetworkAdvanced {
 			double d2 = computeDistance(origin, destination);
 			System.out.println(name + " " + d1/d2);
 			ratioLookup.put(name, d1/d2);
+			System.out.println(name + " " + d1/d2);
 			return d1 / d2;
 		} else {
 			return ratioLookup.get(name);
@@ -366,7 +367,7 @@ public class RailNetworkAdvanced {
 						HashMap<String, Double> jToI = new HashMap<>();
 						jToI.put(i, ratio);
 						allDistMap.put(j, jToI);
-					} else { //Station j already exists in main Map
+					} else {
 						allDistMap.get(j).put(i, ratio);
 					}
 				}
