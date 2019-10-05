@@ -9,15 +9,9 @@ import assg1p1.Station;
 public class RailNetworkAdvanced {
 
 	private TreeMap<String,Station> stationList;
-	private HashMap<String, Double> ratioLookup;
-	private HashMap<String, Integer> distLookup;
-	private ArrayList<String> routeLookup;
-
+	
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
-		ratioLookup = new HashMap<>();
-		distLookup = new HashMap<>();
-		routeLookup = new ArrayList<>();
 		
 		try {	
 			readLinesData(lineData);
@@ -36,21 +30,14 @@ public class RailNetworkAdvanced {
 	 * @throws IOException
 	 */
 
-	HashMap<String, ArrayList<String>> trainLines = new HashMap<>();
-
 	public void readLinesData(String infile) throws IOException {
 		// update for lines data: { Code, Line, Start, End, StationCount }
 		BufferedReader in = new BufferedReader(new FileReader(infile));
 		in.readLine(); // remove headers
 		while (in.ready()) {
-			ArrayList<String> data = new ArrayList<String>();
-			String[] temp = in.readLine().split(",");
-			for(String items: temp){
-				data.add(items);
-				trainLines.put(temp[0], data);
-			}
-		} 
-		in.close();
+			// to do
+			in.readLine();
+		} in.close();
 	}
 
 	/**
@@ -205,7 +192,7 @@ public class RailNetworkAdvanced {
         // Distance of origin to itself is always 0 
         dist.replace(origin, 0);
 		
-        for (String s : stationList.keySet()) { 
+        for (int i = 0; i < stationList.size(); i++) { 
             int min = Integer.MAX_VALUE;
 			String nextShortest = null; 
   
@@ -287,67 +274,10 @@ public class RailNetworkAdvanced {
 	 * @return	s			the ratio d1/d2 as explained above
 	 */
 	public double computeRatio(String origin, String destination) {
-		if (origin.equals(destination)) {
-			return 0;
-		}
-		String name = getCombinedName(origin, destination);
-		if(!ratioLookup.containsKey(name)){
-			routeLookup = new ArrayList<>(routeMinDistance(origin, destination));
-			for(int i = 0; i<routeLookup.size(); i++){
-				List<String> subList = routeLookup.subList(i, routeLookup.size());
-				ArrayList<String> path = new ArrayList<>(subList);
-				mapRatios(path);
-			}
-		}
-		if(ratioLookup.containsKey(name))
-			return ratioLookup.get(name);
-		else
-			return (double) 0;
-	}
 
-	public void mapRatios(ArrayList<String> route){
-		if(route.size()<2){
-			return;
-		}
-		String head = route.get(0);
-		String tail = route.get(route.size()-1);
-		double d2 = computeDistance(head, tail);
-		String name = getCombinedName(head, tail);
-		
-		if (!ratioLookup.containsKey(name)) {
-			int d1;
-			if (!distLookup.containsKey(name)) {
-				d1 = findTotalDistance(route);
-				route.remove(route.size() - 1);
-				distLookup.put(name, d1);
-			} 
-			else {
-				route.remove(route.size()-1);
-				d1 = distLookup.get(name);
-			}
-			ratioLookup.put(name, d1/d2);
-<<<<<<< HEAD
-			System.out.println(name + " " + d1/d2);
-			return d1 / d2;
-		} else {
-			return ratioLookup.get(name);
-=======
->>>>>>> 92b6a66dfc4c60253aab574addb1659ca64eec08
-		}
-		else{
-			route.remove(route.size()-1);
-		}
-		mapRatios(route);
-	}
-	public String getCombinedName(String n1, String n2) {
-		String name;
-		if (n1.charAt(0) > n2.charAt(0)) {
-			name = n2 + "-" + n1;
-		} else {
-			name = n1 + "-" + n2;
-		} 
-		
-		return name;
+		double d1 = findTotalDistance(routeMinDistance(origin, destination));
+		double d2 = computeDistance(origin, destination);
+		return d1/d2;
 	}
 	
 	
@@ -368,41 +298,36 @@ public class RailNetworkAdvanced {
 		// there will be duplicity as get(i, j) will be the same as get(j, i)
 		// if j == i, 
 		// when we create a allDistMap for j, i; create for i, j?
+		for(Station i: stationList.values())
+		{
+			for(Station j: stationList.values())
+			{
+				// Chatswood -> Roseville
+				// Station j is not found in main Map (allDistMap)
+				// := create j in mainMap
+				if(!allDistMap.containsKey(j.getName()))
+				{
+					// if allDistMap !contain Roseville
+					// create a sub map; insert (station j, ratio)
+					HashMap<String, Double> allDistMap2 = new HashMap<String, Double>();
+					// allDistMap2<Chatswood, ratio>
+					allDistMap2.put(i.getName(), computeRatio(j.getName(), i.getName()));
+					// allDistMap<Roseville, <Chatswood, ratio>>
+					allDistMap.put(j.getName(), allDistMap2);
+					System.out.println("Here");
+				} 
+				else { //Station j already exists in main Map
+					HashMap<String, Double> allDistMap2 = new HashMap<String, Double>();
+					System.out.println("Here3");
 
-		for (String i: stationList.keySet()) {	
-			for (String j: stationList.keySet()) {
-				if (!i.equals(j)) {
-					// Chatswood -> Roseville
-					// Station j is not found in main Map (allDistMap)
-					// := create j in mainMap
-					if (allDistMap.containsKey(i) && allDistMap.containsKey(j)) {
-						if (allDistMap.get(i).containsKey(j) && allDistMap.get(j).containsKey(i)) {
-							continue;
-						}
-					}
-
-					double ratio = computeRatio(i, j);
-
-					if (!allDistMap.containsKey(i)) {
-						HashMap<String, Double> iToJ = new HashMap<>();
-						iToJ.put(j, ratio);
-						allDistMap.put(i, iToJ);
-					} else {
-						allDistMap.get(i).put(j, ratio);
-					}
-					
-					if (!allDistMap.containsKey(j)) {	
-						HashMap<String, Double> jToI = new HashMap<>();
-						jToI.put(i, ratio);
-						allDistMap.put(j, jToI);
-					} else {
-						allDistMap.get(j).put(i, ratio);
-					}
+					// allDistMap2<Roseville, ratio>
+					allDistMap2.put(j.getName(), computeRatio(i.getName(), j.getName()));
+					// allDistMap<Chatswood, <Roseville, ratio>>
+					allDistMap.put(i.getName(), allDistMap2);
 				}
 			}
 		}
 
-		//System.out.println(ratioLookup);
 		return allDistMap;
 	}
 	
