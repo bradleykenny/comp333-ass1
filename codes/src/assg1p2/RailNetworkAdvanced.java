@@ -326,13 +326,6 @@ public class RailNetworkAdvanced {
 				d1 = distLookup.get(name);
 			}
 			ratioLookup.put(name, d1/d2);
-<<<<<<< HEAD
-			System.out.println(name + " " + d1/d2);
-			return d1 / d2;
-		} else {
-			return ratioLookup.get(name);
-=======
->>>>>>> 92b6a66dfc4c60253aab574addb1659ca64eec08
 		}
 		else{
 			route.remove(route.size()-1);
