@@ -20,7 +20,7 @@ public class RailNetworkAdvanced {
 		routeLookup = new ArrayList<>();
 		
 		try {	
-			// readLinesData(lineData);
+			readLinesData(lineData);
 			readStationData(trainData);
 			readConnectionData(connectionData);
 		}
@@ -36,13 +36,21 @@ public class RailNetworkAdvanced {
 	 * @throws IOException
 	 */
 
+	HashMap<String, ArrayList<String>> trainLines = new HashMap<>();
+
 	public void readLinesData(String infile) throws IOException {
 		// update for lines data: { Code, Line, Start, End, StationCount }
 		BufferedReader in = new BufferedReader(new FileReader(infile));
 		in.readLine(); // remove headers
 		while (in.ready()) {
-			in.readLine();
-		} in.close();
+			ArrayList<String> data = new ArrayList<String>();
+			String[] temp = in.readLine().split(",");
+			for(String items: temp){
+				data.add(items);
+				trainLines.put(temp[0], data);
+			}
+		} 
+		in.close();
 	}
 
 	/**
