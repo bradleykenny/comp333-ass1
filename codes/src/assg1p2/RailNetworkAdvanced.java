@@ -309,26 +309,27 @@ public class RailNetworkAdvanced {
 		if(route.size()<2){
 			return;
 		}
+
 		String head = route.get(0);
 		String tail = route.get(route.size()-1);
 		double d2 = computeDistance(head, tail);
 		String name = getCombinedName(head, tail);
 		
 		if (!ratioLookup.containsKey(name)) {
-			int d1;
-			if (!distLookup.containsKey(name)) {
-				d1 = findTotalDistance(route);
-				route.remove(route.size() - 1);
-				distLookup.put(name, d1);
-			} 
-			else {
-				route.remove(route.size()-1);
-				d1 = distLookup.get(name);
-			}
+			
+			//if (!distLookup.containsKey(name)) {
+			int d1 = findTotalDistance(route);
+			route.remove(route.size() - 1);
+			//	distLookup.put(name, d1);
+			//} 
+			//else {
+			//	route.remove(route.size()-1);
+			//	d1 = distLookup.get(name);
+			//}
 			ratioLookup.put(name, d1/d2);
 		}
 		else{
-			route.remove(route.size()-1);
+			route.remove(0);
 		}
 		mapRatios(route);
 	}
