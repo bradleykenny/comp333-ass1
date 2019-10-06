@@ -9,6 +9,7 @@ import assg1p1.Station;
 public class RailNetworkAdvanced {
 
 	private TreeMap<String,Station> stationList;
+	
 	private HashMap<String, Double> ratioLookup;
 	private HashMap<String, Integer> distLookup;
 	private ArrayList<String> routeLookup;
@@ -333,6 +334,7 @@ public class RailNetworkAdvanced {
 		}
 		mapRatios(route);
 	}
+
 	public String getCombinedName(String n1, String n2) {
 		String name;
 		if (n1.charAt(0) > n2.charAt(0)) {
@@ -357,47 +359,33 @@ public class RailNetworkAdvanced {
 	 * @return a hashmap containing the ratios
 	 */
 	public HashMap<String,HashMap<String,Double>> computeAllRatio() {
-		HashMap<String, HashMap<String, Double>> allDistMap = new HashMap<String, HashMap<String, Double>>(); 
-		
-		// there will be duplicity as get(i, j) will be the same as get(j, i)
-		// if j == i, 
-		// when we create a allDistMap for j, i; create for i, j?
+		distLookup = new HashMap<>(); // distances will be bidirectional
+		HashMap<String, HashMap<String, Double>> ratios = new HashMap<>();
 
-		for (String i: stationList.keySet()) {	
-			for (String j: stationList.keySet()) {
-				if (!i.equals(j)) {
-					// Chatswood -> Roseville
-					// Station j is not found in main Map (allDistMap)
-					// := create j in mainMap
-					if (allDistMap.containsKey(i) && allDistMap.containsKey(j)) {
-						if (allDistMap.get(i).containsKey(j) && allDistMap.get(j).containsKey(i)) {
-							continue;
-						}
-					}
+		// need to calculate all shortest paths
 
-					double ratio = computeRatio(i, j);
+		for (String a : stationList.keySet()) {
+			for (String b : stationList.keySet()) {
+				String name = getCombinedName(a, b);
+				if (!distLookup.containsKey(name)) {
+					distLookup.put(name, Integer.MAX_VALUE); // probably dont want to do
+				}
+			}
+		}
 
-					if (!allDistMap.containsKey(i)) {
-						HashMap<String, Double> iToJ = new HashMap<>();
-						iToJ.put(j, ratio);
-						allDistMap.put(i, iToJ);
-					} else {
-						allDistMap.get(i).put(j, ratio);
-					}
-					
-					if (!allDistMap.containsKey(j)) {	
-						HashMap<String, Double> jToI = new HashMap<>();
-						jToI.put(i, ratio);
-						allDistMap.put(j, jToI);
-					} else {
-						allDistMap.get(j).put(i, ratio);
+		for (String c : stationList.keySet()) { // k
+			for (String a : stationList.keySet()) { // i
+				for (String b : stationList.keySet()) { // j
+					int newVal = distLookup.get(getCombinedName(a, c)) + distLookup.get(getCombinedName(c, b));
+					if (newVal < distLookup.get(getCombinedName(a, b))) {
+						distLookup.replace(getCombinedName(a, b), newVal);
+						// do ratio calculations
 					}
 				}
 			}
 		}
 
-		//System.out.println(ratioLookup);
-		return allDistMap;
+		return null;
 	}
 	
 	/**
