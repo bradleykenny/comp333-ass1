@@ -292,22 +292,22 @@ public class RailNetworkAdvanced {
 			return 0;
 		}
 		String name = getCombinedName(origin, destination);
-		if(!ratioLookup.containsKey(name)){
+		if (!ratioLookup.containsKey(name)) {
 			routeLookup = new ArrayList<>(routeMinDistance(origin, destination));
-			for(int i = 0; i<routeLookup.size(); i++){
+			for(int i = 0; i < routeLookup.size(); i++){
 				List<String> subList = routeLookup.subList(i, routeLookup.size());
 				ArrayList<String> path = new ArrayList<>(subList);
 				mapRatios(path);
 			}
 		}
-		if(ratioLookup.containsKey(name))
+		if (ratioLookup.containsKey(name))
 			return ratioLookup.get(name);
 		else
 			return (double) 0;
 	}
 
 	public void mapRatios(ArrayList<String> route){
-		if(route.size()<2){
+		if (route.size() < 2){
 			return;
 		}
 
