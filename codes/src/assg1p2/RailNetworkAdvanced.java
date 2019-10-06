@@ -8,7 +8,7 @@ import assg1p1.Station;
 
 public class RailNetworkAdvanced {
 
-	private TreeMap<String,Station> stationList;
+	private TreeMap<String, Station> stationList;
 	private HashMap<String, Double> ratioLookup;
 	private HashMap<String, Integer> distLookup;
 	private ArrayList<String> routeLookup;
@@ -425,7 +425,25 @@ public class RailNetworkAdvanced {
 	 * @return				the route taken
 	 */
 	public ArrayList<String>routeMinStopWithRoutes(String origin, String destination){
+
+		// using routeMinStop, find the shortest path from origin to destination; in an ArrayList
+		// Regarding lines data, need to create a Map that contains all the stations in a line?
+		// As example states: Beecroft -> Chatswood: 
+		// T9[Beecroft, Cheltenham, Epping] -> Metro[Epping, Mq uni, mq park, Nth Ryde, Chatswood]
+		// should have a functionality that gets train line associated to that stop
+		// Station.getname(chatswood).getLine() = T1, T9, Metro
+
+		// case 1: Redfern -> Strathfield: T1, T2, T9
+		// must be able to return T1 (direct line)
+		// maybe a lookup table? look up origin's line and choose the least # stops to destination
+		// List will return Redfern -> Strathfield
+		// look up train line list and look up Redfern, BFS the list of train lines and find the lowest # of stations
+	
+		// Above will havve trouble if a swap is required; Beecroft -> Chatswood
+		// From original arrayList, O(n) and list all the station lines attached to stations
+		// https://www.geeksforgeeks.org/shortest-path-for-directed-acyclic-graphs/
 		
+
 		return null;
 	}
 
