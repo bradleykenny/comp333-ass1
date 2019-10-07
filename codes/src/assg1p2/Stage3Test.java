@@ -127,7 +127,7 @@ public class Stage3Test {
 		String origin = "Beecroft";
 		String destination = "Chatswood";
 		String[] expected = {"T9 towards Gordon from Hornsby", "Beecroft", "Cheltenham", "Epping",
-							"Metro towards Chatswood from Epping", "Epping", "Macquarie University",
+							"M towards Chatswood from Epping", "Epping", "Macquarie University",
 							"Macquarie Park", "North Ryde", "Chatswood"};
 		
 		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
@@ -138,7 +138,7 @@ public class Stage3Test {
 	public void routeMinStopWithRoutesTest2() {
 		String origin = "Chatswood";
 		String destination = "Beecroft";
-		String[] expected = {"Metro towards Epping from Chatswood", "Chatswood", "North Ryde", "Macquarie Park",
+		String[] expected = {"M towards Epping from Chatswood", "Chatswood", "North Ryde", "Macquarie Park",
 							"Macquarie University", "Epping", "T9 towards Hornsby from Gordon",
 							"Epping", "Cheltenham", "Beecroft"};
 		
