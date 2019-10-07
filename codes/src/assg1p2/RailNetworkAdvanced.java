@@ -44,7 +44,6 @@ public class RailNetworkAdvanced {
 
 
 	public void readLinesData(String infile) throws IOException {
-		// update for lines data: { Code, Line, Start, End, StationCount }
 		BufferedReader in = new BufferedReader(new FileReader(infile));
 		in.readLine(); // remove headers
 		while (in.ready()) {
@@ -77,10 +76,9 @@ public class RailNetworkAdvanced {
 			stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
 			for (int i = 3; i < temp.length - 1; i++) {
 				if (!temp[i].isEmpty()) {
-					stationList.get(temp[0]).addLine(lineList.get(stationNames[i-3]), Integer.parseInt(temp[i]));
+					stationList.get(temp[0]).addLine(stationNames[i-3], Integer.parseInt(temp[i]));
 				}
 			}
-
 		} in.close();
 	}
 	/**
