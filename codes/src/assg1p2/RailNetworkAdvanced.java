@@ -19,7 +19,7 @@ public class RailNetworkAdvanced {
 		String linesData = "src/data/lines_data.csv";
 		RailNetworkAdvanced rn = new RailNetworkAdvanced(stationData, connectionData, linesData);
 
-		System.out.println(rn.routeMinStopWithRoutes("Beecroft", "Chatswood"));
+		System.out.println(rn.routeMinStopWithRoutes("Redfern", "Burwood"));
 	}
 
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
@@ -420,49 +420,39 @@ public class RailNetworkAdvanced {
 			ans.add(origin);
 			return ans;
 		}
-		
-		HashMap<String, Integer> stops = new HashMap<>(); // Value is num of stops from Key to d
-		HashMap<String, String> parents = new HashMap<>(); // Value is the station with least stops to the Key (in direction o -> d)
-  
-		// Initialisation of values
-        for (String s : stationList.keySet()) { 
-            stops.put(s, Integer.MAX_VALUE);
-			stationList.get(s).setUnmarked();
-			parents.put(s, "");
-        } 
-  
-        // Distance of origin to itself is always 1 stop (being itself) 
-        stops.replace(origin, 1);
-		
-        for (int i = 0; i < stationList.size(); i++) { 
-            int min = Integer.MAX_VALUE;
-			String nextShortest = null; 
-  
-			// Find next best station in terms of least stops
-			for (String possibleStation : stationList.keySet()) {
-				if (!stationList.get(possibleStation).isMarked() && stops.get(possibleStation) <= min) { 
-					min = stops.get(possibleStation); 
-					nextShortest = possibleStation; 
-				} 
-			} stationList.get(nextShortest).setMarked();
-  
-            // Updating distance of adjacent stations to picked station
-            for (Station adj : stationList.get(nextShortest).getAdjacentStations().keySet()) { 
-				if (!stationList.get(adj.getName()).isMarked() && stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && stops.get(nextShortest) != Integer.MAX_VALUE && (stops.get(nextShortest) + 1) < (stops.get(adj.getName()))) {
-					stops.replace(adj.getName(), stops.get(nextShortest) + 1); // Update dist to reflect new num of stops to this shortest path
-					parents.replace(adj.getName(), nextShortest); // Update parent to be new min stops in shortest path to this station
-					// Once we get to the destination, stop and return
-					if (adj.getName().equals(destination)) {
-						ArrayList<String> temp = getStops(parents, origin, destination);
-						return temp;
+		HashMap<String, String> mapper = new HashMap<>();
+		ArrayList<String> answer = new ArrayList<>();
+		Queue<Station> pq = new LinkedList<Station>();
+
+		pq.add(stationList.get(origin));
+
+		while (pq.size() != stationList.keySet().size()) 
+		{ 
+			Station parentStation = pq.poll();
+			ArrayList<String> lineNeighbors = getLineNeighbors(parentStation);
+			for(String temp: lineNeighbors) 
+			{
+				Station adjStation = stationList.get(temp);
+				if(!adjStation.isMarked()) {
+					mapper.put(adjStation.getName(), parentStation.getName());
+					adjStation.setMarked();
+					pq.add(adjStation);
+				}
+
+				if(adjStation.getName().equals(destination))
+				{
+					answer.add(0, adjStation.getName());
+					while(!destination.equals(origin))
+					{									
+						answer.add(0, mapper.get(destination));
+						destination = mapper.get(destination);
 					}
+					return answer;
 				}
 			}
-		}
-		
-		// If don't find anything, return empty ArrayList.
-		return new ArrayList<>();
-
+		} 
+		return null;
+	}
 
 
 		// using routeMinStop, find the shortest path from origin to destination; in an ArrayList
@@ -481,12 +471,22 @@ public class RailNetworkAdvanced {
 		// Above will havve trouble if a swap is required; Beecroft -> Chatswood
 		// From original arrayList, O(n) and list all the station lines attached to stations
 		// https://www.geeksforgeeks.org/shortest-path-for-directed-acyclic-graphs/
+
+	public ArrayList<String> getLineNeighbors(Station s) {
+		ArrayList<String> neighbors = new ArrayList<>();
+		for(String temp : s.getLines().keySet()){
+			int stop = s.getLines().get(temp);
+			if(stop==1){
+				neighbors.add(trainMap.get(temp).get(stop+1));
+			}
+			else if(stop==trainMap.get(temp).size()){
+				neighbors.add(trainMap.get(temp).get(stop-1));
+			}
+			else{
+				neighbors.add(trainMap.get(temp).get(stop+1));
+				neighbors.add(trainMap.get(temp).get(stop-1));
+			}
+		}
+		return neighbors;
 	}
-
-	public ArrayList<String> getLineInformation(ArrayList<String> route) {
-
-
-		return null;
-	}
-
 }
