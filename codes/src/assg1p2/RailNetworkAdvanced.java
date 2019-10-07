@@ -19,7 +19,7 @@ public class RailNetworkAdvanced {
 		String linesData = "src/data/lines_data.csv";
 		RailNetworkAdvanced rn = new RailNetworkAdvanced(stationData, connectionData, linesData);
 
-		System.out.println(rn.routeMinStopWithRoutes("Redfern", "Burwood"));
+		System.out.println(rn.routeMinStopWithRoutes("Hornsby", "Ashfield"));
 	}
 
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
@@ -420,21 +420,25 @@ public class RailNetworkAdvanced {
 			ans.add(origin);
 			return ans;
 		}
-		HashMap<String, String> mapper = new HashMap<>();
-		ArrayList<String> answer = new ArrayList<>();
+		HashMap<String, HashMap<String, String>> mapper = new HashMap<>();
 		Queue<Station> pq = new LinkedList<Station>();
+
+		ArrayList<String> answer = new ArrayList<>();
+		ArrayList<String> lineInfo = new ArrayList<>();
 
 		pq.add(stationList.get(origin));
 
 		while (pq.size() != stationList.keySet().size()) 
 		{ 
 			Station parentStation = pq.poll();
-			ArrayList<String> lineNeighbors = getLineNeighbors(parentStation);
-			for(String temp: lineNeighbors) 
+			HashMap<String, String> lineNeighbors = getLineNeighbors(parentStation);
+			for(String temp: lineNeighbors.keySet()) 
 			{
 				Station adjStation = stationList.get(temp);
 				if(!adjStation.isMarked()) {
-					mapper.put(adjStation.getName(), parentStation.getName());
+					HashMap<String, String> otherStation = new HashMap<>();
+					otherStation.put(parentStation.getName(), lineNeighbors.get(temp));
+					mapper.put(adjStation.getName(), otherStation);
 					adjStation.setMarked();
 					pq.add(adjStation);
 				}
@@ -442,15 +446,36 @@ public class RailNetworkAdvanced {
 				if(adjStation.getName().equals(destination))
 				{
 					answer.add(0, adjStation.getName());
+					//lineInfo.add(0, lineNeighbors.get(temp));
+					String prevLine = "";
 					while(!destination.equals(origin))
 					{									
-						answer.add(0, mapper.get(destination));
-						destination = mapper.get(destination);
-					}
+						for (String par : mapper.get(destination).keySet()) {
+							System.out.println(mapper.get(destination).get(par));
+							if (prevLine.isEmpty()) {
+								//answer.add(0, mapper.get(destination).get(par));
+								prevLine = mapper.get(destination).get(par);
+							}
+
+							if (!mapper.get(destination).get(par).equals(prevLine)) {
+								answer.add(0, par);
+								answer.add(0, lineList.get);
+								prevLine = mapper.get(destination).get(par);
+							}
+							
+							answer.add(0, par);
+							if (par.equals(origin)) {
+								answer.add(0, prevLine);
+							}
+							destination = par;
+						}
+						//lineInfo.add(0, lineNeighbors.get(destination));
+					} 
 					return answer;
 				}
 			}
 		} 
+
 		return new ArrayList<>();
 	}
 
@@ -472,19 +497,19 @@ public class RailNetworkAdvanced {
 		// From original arrayList, O(n) and list all the station lines attached to stations
 		// https://www.geeksforgeeks.org/shortest-path-for-directed-acyclic-graphs/
 
-	public ArrayList<String> getLineNeighbors(Station s) {
-		ArrayList<String> neighbors = new ArrayList<>();
+	public HashMap<String, String> getLineNeighbors(Station s) {
+		HashMap<String, String> neighbors = new HashMap<>();
 		for(String temp : s.getLines().keySet()){
 			int stop = s.getLines().get(temp);
 			if(stop==1){
-				neighbors.add(trainMap.get(temp).get(stop+1));
+				neighbors.put(trainMap.get(temp).get(stop+1), temp);
 			}
 			else if(stop==trainMap.get(temp).size()){
-				neighbors.add(trainMap.get(temp).get(stop-1));
+				neighbors.put(trainMap.get(temp).get(stop-1), temp);
 			}
 			else{
-				neighbors.add(trainMap.get(temp).get(stop+1));
-				neighbors.add(trainMap.get(temp).get(stop-1));
+				neighbors.put(trainMap.get(temp).get(stop+1), temp);
+				neighbors.put(trainMap.get(temp).get(stop-1), temp);
 			}
 		}
 		return neighbors;

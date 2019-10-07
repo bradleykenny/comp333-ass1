@@ -122,6 +122,7 @@ public class Stage3Test {
 		assertEquals(expected,actual,epsilon);
 	}
 
+	@Test
 	public void routeMinStopWithRoutesTest1() {
 		String origin = "Beecroft";
 		String destination = "Chatswood";
@@ -133,6 +134,7 @@ public class Stage3Test {
 		assertArrayEquals(expected, actual.toArray());
 	}
 
+	@Test
 	public void routeMinStopWithRoutesTest2() {
 		String origin = "Chatswood";
 		String destination = "Beecroft";
@@ -144,6 +146,7 @@ public class Stage3Test {
 		assertArrayEquals(expected, actual.toArray());
 	}
 
+	@Test
 	public void routeMinStopWithRoutesTest3() {
 		String origin = "Epping";
 		String destination = "Strathfield";
@@ -155,6 +158,7 @@ public class Stage3Test {
 		assertArrayEquals(expected, actual.toArray());
 	}
 
+	@Test
 	public void routeMinStopWithRoutesTest4() {
 		String origin = "Epping";
 		String destination = "Redfern";
@@ -169,6 +173,7 @@ public class Stage3Test {
 		assertArrayEquals(expected, actual.toArray());
 	}
 
+	@Test
 	public void routeMinStopWithRoutesTest5() {
 		String origin = "Hornsby";
 		String destination = "Ashfield";
@@ -182,6 +187,7 @@ public class Stage3Test {
 		assertArrayEquals(expected, actual.toArray());
 	}
 
+	@Test
 	public void routeMinStopWithRoutesTest6() {
 		String origin = "Macarthur";
 		String destination = "Liverpool";
