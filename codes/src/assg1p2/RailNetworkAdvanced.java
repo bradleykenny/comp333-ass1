@@ -455,13 +455,13 @@ public class RailNetworkAdvanced {
 
 							if (!mapper.get(destination).get(par).equals(prevLine)) {
 								answer.add(0, par);
-								answer.add(0, prevLine);
+								answer.add(0, lineInfo(par, destination, prevLine));
 								prevLine = mapper.get(destination).get(par);
 							}
 							
 							answer.add(0, par);
 							if (par.equals(origin)) {
-								answer.add(0, prevLine);
+								answer.add(0, lineInfo(par, destination, prevLine));
 							}
 							destination = par;
 						}
@@ -474,23 +474,20 @@ public class RailNetworkAdvanced {
 		return new ArrayList<>();
 	}
 
+	public String lineInfo(String par, String destination, String prevLine) {
+		int parVal = 0;
+		int desVal = 0;
+		for (Integer s : trainMap.get(prevLine).keySet()) {
+			if (trainMap.get(prevLine).get(s).equals(destination)) {
+				desVal = s;
+			}
+			if (trainMap.get(prevLine).get(s).equals(par)) {
+				parVal = s;
+			}
+		}
 
-		// using routeMinStop, find the shortest path from origin to destination; in an ArrayList
-		// Regarding lines data, need to create a Map that contains all the stations in a line?
-		// As example states: Beecroft -> Chatswood: 
-		// T9[Beecroft, Cheltenham, Epping] -> Metro[Epping, Mq uni, mq park, Nth Ryde, Chatswood]
-		// should have a functionality that gets train line associated to that stop
-		// Station.getname(chatswood).getLine() = T1, T9, Metro
-
-		// case 1: Redfern -> Strathfield: T1, T2, T9
-		// must be able to return T1 (direct line)
-		// maybe a lookup table? look up origin's line and choose the least # stops to destination
-		// List will return Redfern -> Strathfield
-		// look up train line list and look up Redfern, BFS the list of train lines and find the lowest # of stations
-	
-		// Above will havve trouble if a swap is required; Beecroft -> Chatswood
-		// From original arrayList, O(n) and list all the station lines attached to stations
-		// https://www.geeksforgeeks.org/shortest-path-for-directed-acyclic-graphs/
+		return lineList.get(prevLine).getName(desVal - parVal);
+	}
 
 	public HashMap<String, String> getLineNeighbors(Station s) {
 		HashMap<String, String> neighbors = new HashMap<>();
