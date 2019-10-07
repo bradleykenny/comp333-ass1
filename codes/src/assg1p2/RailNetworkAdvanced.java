@@ -459,7 +459,7 @@ public class RailNetworkAdvanced {
 
 							if (!mapper.get(destination).get(par).equals(prevLine)) {
 								answer.add(0, par);
-								answer.add(0, lineList.get);
+								answer.add(0, prevLine);
 								prevLine = mapper.get(destination).get(par);
 							}
 							
