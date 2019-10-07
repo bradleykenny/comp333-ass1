@@ -1,0 +1,31 @@
+M={1=Epping, 2=Macquarie University, 3=Macquarie Park, 4=North Ryde, 5=Chatswood}, 
+
+T1B={1=Berowra, 2=Mount Kuring-gai, 3=Mount Colah, 4=Asquith, 5=Hornsby, 6=Waitara, 7=Wahroonga, 8=Warrawee, 9=Turramurra, 10=Pymble, 11=Gordon, 12=Killara, 13=Lindfield, 14=Roseville, 15=Chatswood, 16=Artarmon, 17=St Leonards, 18=Wollstonecraft, 19=Waverton, 20=North Sydney, 21=Milsons Point, 22=Wynyard, 23=Town Hall, 24=Central, 25=Redfern, 26=Burwood, 27=Strathfield, 28=Lidcombe}, 
+
+T1E={1=Emu Plains, 2=Penrith, 3=Kingswood, 4=Werrington, 5=St Marys, 6=Mount Druitt, 7=Rooty Hill, 8=Doonside, 9=Blacktown, 10=Seven Hills, 11=Westmead, 12=Parramatta, 13=Lidcombe, 14=Strathfield, 15=Redfern, 16=Central, 17=Town Hall, 18=Wynyard, 19=Milsons Point, 20=North Sydney, 21=Waverton, 22=Wollstonecraft, 23=St Leonards, 24=Artarmon, 25=Chatswood}, 
+
+T1R={1=Richmond, 2=East Richmond, 3=Clarendon, 4=Windsor, 5=Mulgrave, 6=Vineyard, 7=Riverstone, 8=Schofields, 9=Quakers Hill, 10=Marayong, 11=Blacktown, 12=Seven Hills, 13=Toongabbie, 14=Pendle Hill, 15=Wentworthville, 16=Westmead, 17=Parramatta, 18=Strathfield, 19=Redfern, 20=Central, 21=Town Hall, 22=Wynyard, 23=Milsons Point, 24=North Sydney, 25=St Leonards, 26=Chatswood}, 
+
+T2L={1=Leppington, 2=Edmondson Park, 3=Glenfield, 4=Casula, 5=Liverpool, 6=Warwick Farm, 7=Cabramatta, 8=Canley Vale, 9=Fairfield, 10=Yennora, 11=Guildford, 12=Merrylands, 13=Granville, 14=Clyde, 15=Auburn, 16=Lidcombe, 17=Flemington, 18=Strathfield, 19=Burwood, 20=Ashfield, 21=Newtown, 22=Redfern, 23=Central, 24=Town Hall, 25=Wynyard, 26=Circular Quay, 27=St James, 28=Museum}, 
+
+T2P={1=Parramatta, 2=Harris Park, 3=Granville, 4=Clyde, 5=Auburn, 6=Lidcombe, 7=Flemington, 8=Homebush, 9=Strathfield, 10=Burwood, 11=Croydon, 12=Ashfield, 13=Summer Hill, 14=Lewisham, 15=Petersham, 16=Stanmore, 17=Newtown, 18=Macdonaldtown, 19=Redfern, 20=Central, 21=Town Hall, 22=Wynyard, 23=Circular Quay, 24=St James, 25=Museum}, 
+
+T3B={1=Liverpool, 2=Warwick Farm, 3=Cabramatta, 4=Carramar, 5=Villawood, 6=Leightonfield, 7=Chester Hill, 8=Sefton, 9=Birrong, 10=Bankstown, 11=Lakemba, 12=Campsie, 13=Marrickville, 14=Sydenham, 15=Redfern, 16=Central, 17=Town Hall, 18=Wynyard, 19=Circular Quay, 20=St James, 21=Museum}, 
+
+T3L={1=Lidcombe, 2=Berala, 3=Regents Park, 4=Birrong, 5=Yagoona, 6=Bankstown, 7=Punchbowl, 8=Wiley Park, 9=Lakemba, 10=Belmore, 11=Campsie, 12=Canterbury, 13=Hurlstone Park, 14=Dulwich Hill, 15=Marrickville, 16=Sydenham, 17=St Peters, 18=Erskineville, 19=Redfern, 20=Central, 21=Town Hall, 22=Wynyard, 23=Circular Quay, 24=St James, 25=Museum}, 
+
+T4C={1=Cronulla, 2=Woolooware, 3=Caringbah, 4=Miranda, 5=Gymea, 6=Kirrawee, 7=Sutherland, 8=Jannali, 9=Como, 10=Oatley, 11=Mortdale, 12=Penshurst, 13=Hurstville, 14=Allawah, 15=Carlton, 16=Kogarah, 17=Rockdale, 18=Wolli Creek, 19=Sydenham, 20=Redfern, 21=Central, 22=Town Hall, 23=Martin Place, 24=Kings Cross, 25=Edgecliff, 26=Bondi Junction}, 
+
+T4W={1=Waterfall, 2=Heathcote, 3=Engadine, 4=Loftus, 5=Sutherland, 6=Mortdale, 7=Penshurst, 8=Hurstville, 9=Allawah, 10=Carlton, 11=Kogarah, 12=Rockdale, 13=Banksia, 14=Arncliffe, 15=Wolli Creek, 16=Tempe, 17=Sydenham, 18=Redfern, 19=Central, 20=Town Hall, 21=Martin Place, 22=Kings Cross, 23=Edgecliff, 24=Bondi Junction}, 
+
+T5={1=Leppington, 2=Edmondson Park, 3=Glenfield, 4=Casula, 5=Liverpool, 6=Warwick Farm, 7=Cabramatta, 8=Canley Vale, 9=Fairfield, 10=Yennora, 11=Guildford, 12=Merrylands, 13=Harris Park, 14=Parramatta, 15=Westmead, 16=Wentworthville, 17=Pendle Hill, 18=Toongabbie, 19=Seven Hills, 20=Blacktown, 21=Marayong, 22=Quakers Hill, 23=Schofields}, 
+
+T6={1=Carlingford, 2=Telopea, 3=Dundas, 4=Rydalmere, 5=Camellia, 6=Rosehill, 7=Clyde}, 
+
+T7={1=Olympic Park, 2=Lidcombe}, 
+
+T8M={1=Macarthur, 2=Campbelltown, 3=Leumeah, 4=Minto, 5=Ingleburn, 6=Macquarie Fields, 7=Glenfield, 8=Holsworthy, 9=East Hills, 10=Panania, 11=Revesby, 12=Wolli Creek, 13=International Airport, 14=Domestic Airport, 15=Mascot, 16=Green Square, 17=Central, 18=Museum, 19=St James, 20=Circular Quay, 21=Wynyard, 22=Town Hall}, 
+
+T8R={1=Revesby, 2=Padstow, 3=Riverwood, 4=Narwee, 5=Beverly Hills, 6=Kingsgrove, 7=Bexley North, 8=Bardwell Park, 9=Turrella, 10=Wolli Creek, 11=International Airport, 12=Domestic Airport, 13=Mascot, 14=Green Square, 15=Central, 16=Museum, 17=St James, 18=Circular Quay, 19=Wynyard, 20=Town Hall}, 
+
+T9={1=Hornsby, 2=Normanhurst, 3=Thornleigh, 4=Pennant Hills, 5=Beecroft, 6=Cheltenham, 7=Epping, 8=Eastwood, 9=Denistone, 10=West Ryde, 11=Meadowbank, 12=Rhodes, 13=Concord West, 14=North Strathfield, 15=Strathfield, 16=Burwood, 17=Redfern, 18=Central, 19=Town Hall, 20=Wynyard, 21=Milsons Point, 22=North Sydney, 23=Waverton, 24=Wollstonecraft, 25=St Leonards, 26=Artarmon, 27=Chatswood, 28=Roseville, 29=Lindfield, 30=Killara, 31=Gordon}}
