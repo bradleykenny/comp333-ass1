@@ -10,6 +10,7 @@ public class RailNetworkAdvanced {
 
 	private TreeMap<String, Station> stationList;
 	private TreeMap<String, Line> lineList;
+	private TreeMap<String, HashMap<Integer, String>> trainMap;
 
 	// delete this before submitting
 	public static void main(String[] args) {
@@ -24,6 +25,7 @@ public class RailNetworkAdvanced {
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
 		lineList = new TreeMap<>();
+		trainMap = new TreeMap<>();
 		
 		try {	
 			readLinesData(lineData);
@@ -70,13 +72,21 @@ public class RailNetworkAdvanced {
 	public void readStationData(String infile) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(infile));
 		in.readLine(); // remove headers
-		String[] stationNames = { "T1E", "T1R", "T1B", "T2P", "T2L", "T3B", "T3L", "T4C", "T4W", "T5", "T6", "T7", "T8M", "T8R", "T9", "M" };
+		String[] lineNames = { "T1E", "T1R", "T1B", "T2P", "T2L", "T3B", "T3L", "T4C", "T4W", "T5", "T6", "T7", "T8M", "T8R", "T9", "M" };
 		while (in.ready()) {
 			String[] temp = in.readLine().split(",");
 			stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
 			for (int i = 3; i < temp.length - 1; i++) {
 				if (!temp[i].isEmpty()) {
-					stationList.get(temp[0]).addLine(stationNames[i-3], Integer.parseInt(temp[i]));
+					stationList.get(temp[0]).addLine(lineNames[i-3], Integer.parseInt(temp[i]));
+					if (!trainMap.containsKey(lineNames[i-3])) {
+						HashMap<Integer, String> newMap = new HashMap<>();
+						newMap.put(Integer.parseInt(temp[i]), temp[0]);
+						trainMap.put(lineNames[i-3], newMap);
+					}
+					else {
+						trainMap.get(lineNames[i-3]).put(Integer.parseInt(temp[i]), temp[0]);
+					}
 				}
 			}
 		} in.close();
