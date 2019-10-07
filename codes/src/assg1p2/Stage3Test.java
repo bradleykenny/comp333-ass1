@@ -14,9 +14,9 @@ public class Stage3Test {
 
 	RailNetworkAdvanced r;
 	@Before public void initialize() {
-		String stationData = "codes/src/data/station_data.csv";
-		String connectionData = "codes/src/data/adjacent_stations.csv";
-		String linesData = "codes/src/data/lines_data.csv";
+		String stationData = "src/data/station_data.csv";
+		String connectionData = "src/data/adjacent_stations.csv";
+		String linesData = "src/data/lines_data.csv";
 		r = new RailNetworkAdvanced(stationData,connectionData,linesData);
 	}	
 	
@@ -95,7 +95,7 @@ public class Stage3Test {
 		assertEquals(expected,actual,epsilon);
 	}
 	
-	@Test//(timeout=1000)
+	@Test(timeout=1000)
 	public void computeAllRatioTest3() {
 		String origin = "Richmond";
 		String destination = "Hurstville";
@@ -108,7 +108,7 @@ public class Stage3Test {
 		assertEquals(expected,actual,epsilon);
 	}
 	
-	@Test//(timeout=1000)
+	@Test(timeout=1000)
 	public void computeAllRatioTest4() {
 		String origin = "Hurstville";
 		String destination = "Richmond";

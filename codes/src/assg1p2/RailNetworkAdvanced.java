@@ -301,22 +301,22 @@ public class RailNetworkAdvanced {
 			return 0;
 		}
 		String name = getCombinedName(origin, destination);
-		if(!ratioLookup.containsKey(name)){
+		if (!ratioLookup.containsKey(name)) {
 			routeLookup = new ArrayList<>(routeMinDistance(origin, destination));
-			for(int i = 0; i<routeLookup.size(); i++){
+			for(int i = 0; i < routeLookup.size(); i++){
 				List<String> subList = routeLookup.subList(i, routeLookup.size());
 				ArrayList<String> path = new ArrayList<>(subList);
 				mapRatios(path);
 			}
 		}
-		if(ratioLookup.containsKey(name))
+		if (ratioLookup.containsKey(name))
 			return ratioLookup.get(name);
 		else
 			return (double) 0;
 	}
 
 	public void mapRatios(ArrayList<String> route){
-		if(route.size()<2){
+		if (route.size() < 2) {
 			return;
 		}
 
@@ -326,23 +326,16 @@ public class RailNetworkAdvanced {
 		String name = getCombinedName(head, tail);
 		
 		if (!ratioLookup.containsKey(name)) {
-			
-			//if (!distLookup.containsKey(name)) {
 			int d1 = findTotalDistance(route);
 			route.remove(route.size() - 1);
-			//	distLookup.put(name, d1);
-			//} 
-			//else {
-			//	route.remove(route.size()-1);
-			//	d1 = distLookup.get(name);
-			//}
 			ratioLookup.put(name, d1/d2);
 		}
-		else{
+		else {
 			route.remove(0);
 		}
 		mapRatios(route);
 	}
+
 	public String getCombinedName(String n1, String n2) {
 		String name;
 		if (n1.charAt(0) > n2.charAt(0)) {
@@ -367,47 +360,51 @@ public class RailNetworkAdvanced {
 	 * @return a hashmap containing the ratios
 	 */
 	public HashMap<String,HashMap<String,Double>> computeAllRatio() {
-		HashMap<String, HashMap<String, Double>> allDistMap = new HashMap<String, HashMap<String, Double>>(); 
-		
-		// there will be duplicity as get(i, j) will be the same as get(j, i)
-		// if j == i, 
-		// when we create a allDistMap for j, i; create for i, j?
+		HashMap<String, HashMap<String, Double>> ratios = new HashMap<>();
+		HashMap<String, HashMap<String, Integer>> distances = new HashMap<>();
 
-		for (String i: stationList.keySet()) {	
-			for (String j: stationList.keySet()) {
-				if (!i.equals(j)) {
-					// Chatswood -> Roseville
-					// Station j is not found in main Map (allDistMap)
-					// := create j in mainMap
-					if (allDistMap.containsKey(i) && allDistMap.containsKey(j)) {
-						if (allDistMap.get(i).containsKey(j) && allDistMap.get(j).containsKey(i)) {
-							continue;
-						}
-					}
-
-					double ratio = computeRatio(i, j);
-
-					if (!allDistMap.containsKey(i)) {
-						HashMap<String, Double> iToJ = new HashMap<>();
-						iToJ.put(j, ratio);
-						allDistMap.put(i, iToJ);
+		for (String a : stationList.keySet()) {
+			for (String b : stationList.keySet()) {
+				if (!distances.containsKey(a)) {
+					if (stationList.get(a).getAdjacentStations().containsKey(stationList.get(b))) {
+						HashMap<String, Integer> temp = new HashMap<>();
+						temp.put(b, stationList.get(a).getAdjacentStations().get(stationList.get(b)));
+						distances.put(a, temp);
 					} else {
-						allDistMap.get(i).put(j, ratio);
+						HashMap<String, Integer> temp = new HashMap<>();
+						temp.put(b, Integer.MAX_VALUE);
+						distances.put(a, temp);
 					}
-					
-					if (!allDistMap.containsKey(j)) {	
-						HashMap<String, Double> jToI = new HashMap<>();
-						jToI.put(i, ratio);
-						allDistMap.put(j, jToI);
+				} else {
+					if (stationList.get(a).getAdjacentStations().containsKey(stationList.get(b))) {
+						distances.get(a).put(b, stationList.get(a).getAdjacentStations().get(stationList.get(b)));
 					} else {
-						allDistMap.get(j).put(i, ratio);
+						distances.get(a).put(b, Integer.MAX_VALUE);
 					}
 				}
 			}
 		}
 
-		//System.out.println(ratioLookup);
-		return allDistMap;
+		for (String c : stationList.keySet()) { 
+			for (String a : stationList.keySet()) { 
+				for (String b : stationList.keySet()) { 
+					int newVal = distances.get(a).get(c) + distances.get(c).get(b);
+					if (newVal < distances.get(a).get(b) && newVal >= 0) {
+						distances.get(a).replace(b, newVal);
+					}
+
+					if (!ratios.containsKey(a)) {
+						HashMap<String, Double> temp = new HashMap<>();
+						temp.put(b, (double) distances.get(a).get(b) / computeDistance(a, b));
+						ratios.put(a, temp);
+					} else {
+						ratios.get(a).put(b, (double) distances.get(a).get(b) / computeDistance(a, b));
+					}
+				}
+			}
+		}
+		
+		return ratios;
 	}
 	
 	/**
@@ -505,9 +502,6 @@ public class RailNetworkAdvanced {
 		// Above will havve trouble if a swap is required; Beecroft -> Chatswood
 		// From original arrayList, O(n) and list all the station lines attached to stations
 		// https://www.geeksforgeeks.org/shortest-path-for-directed-acyclic-graphs/
-		
-
-		return null;
 	}
 
 }
