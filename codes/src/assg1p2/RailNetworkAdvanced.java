@@ -445,28 +445,30 @@ public class RailNetworkAdvanced {
 
 				// once we find destination, backtrack
 				if(adjStation.getName().equals(destination)) {
-					answer.add(0, adjStation.getName());
+					//answer.add(0, adjStation.getName());
 					String prevLine = ""; // tracks trainline
 					while (!destination.equals(origin)) {									
-						for (String par : mapper.get(destination).keySet()) {
+						for (String parent : mapper.get(destination).keySet()) {
 							if (prevLine.isEmpty()) {
-								prevLine = mapper.get(destination).get(par);
+								prevLine = mapper.get(destination).get(parent);
 							}
 
-							if (!mapper.get(destination).get(par).equals(prevLine)) {
-								answer.add(0, par);
-								answer.add(0, lineInfo(par, destination, prevLine));
+							if (!mapper.get(destination).get(parent).equals(prevLine)) {
+								answer.add(0, destination);
+								answer.add(0, lineInfo(parent, destination, prevLine));
 							}
 							
-							answer.add(0, par);
-							if (par.equals(origin)) {
-								answer.add(0, lineInfo(par, destination, prevLine));
+							answer.add(0, destination);
+							if (parent.equals(origin)) {
+								answer.add(0, parent);
+								answer.add(0, lineInfo(parent, destination, prevLine));
 							}
 							
-							prevLine = mapper.get(destination).get(par);
-							destination = par;
+							prevLine = mapper.get(destination).get(parent);
+							destination = parent;
 						}
 					} 
+					System.out.println(answer);
 					return answer;
 				}
 			}
@@ -487,7 +489,7 @@ public class RailNetworkAdvanced {
 			}
 		}
 
-		return lineList.get(prevLine).getName(desVal - parVal);
+		return lineList.get(prevLine).getLineDirection(desVal - parVal);
 	}
 
 	public HashMap<String, String> getLineNeighbors(Station s) {
