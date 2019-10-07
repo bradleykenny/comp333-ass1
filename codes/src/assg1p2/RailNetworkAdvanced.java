@@ -369,6 +369,7 @@ public class RailNetworkAdvanced {
 		HashMap<String, HashMap<String, Double>> ratios = new HashMap<>();
 		HashMap<String, HashMap<String, Integer>> distances = new HashMap<>();
 
+		// set distances to distance between them if adj or MAX_VALUE if not
 		for (String a : stationList.keySet()) {
 			for (String b : stationList.keySet()) {
 				if (!distances.containsKey(a)) {
@@ -391,6 +392,7 @@ public class RailNetworkAdvanced {
 			}
 		}
 
+		// find the shortest distance for each pair
 		for (String c : stationList.keySet()) { 
 			for (String a : stationList.keySet()) {
 				for (String b : stationList.keySet()) {
@@ -398,17 +400,23 @@ public class RailNetworkAdvanced {
 					if (newVal < distances.get(a).get(b) && newVal >= 0) {
 						distances.get(a).replace(b, newVal);
 					}
-
-					if (!ratios.containsKey(a)) {
-						HashMap<String, Double> temp = new HashMap<>();
-						temp.put(b, (double) distances.get(a).get(b) / computeDistance(a, b));
-						ratios.put(a, temp);
-					} else {
-						ratios.get(a).put(b, (double) distances.get(a).get(b) / computeDistance(a, b));
-					}
 				}
 			}
 		}
+
+		// calculate ratio on each final distance
+		for (String a : stationList.keySet()) {
+			for (String b : stationList.keySet()) {
+				if (!ratios.containsKey(a)) {
+					HashMap<String, Double> temp = new HashMap<>();
+					temp.put(b, (double) distances.get(a).get(b) / computeDistance(a, b));
+					ratios.put(a, temp);
+				} else {
+					ratios.get(a).put(b, (double) distances.get(a).get(b) / computeDistance(a, b));
+				}
+			}
+		}
+
 		return ratios;
 	}
 	
