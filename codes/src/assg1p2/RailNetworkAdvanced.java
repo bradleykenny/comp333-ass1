@@ -432,19 +432,21 @@ public class RailNetworkAdvanced {
 		while (pq.size() != stationList.keySet().size()) { 
 			Station parentStation = pq.poll();
 			HashMap<String, String> lineNeighbors = getLineNeighbors(parentStation);
-			for (String temp: lineNeighbors.keySet()) {
-				Station adjStation = stationList.get(temp);
+			// iterate over all neighbours on all possible lines for this station
+			for (String neighbour: lineNeighbors.keySet()) {
+				Station adjStation = stationList.get(neighbour); 
 				if (!adjStation.isMarked()) {
 					HashMap<String, String> otherStation = new HashMap<>();
-					otherStation.put(parentStation.getName(), lineNeighbors.get(temp));
+					otherStation.put(parentStation.getName(), lineNeighbors.get(neighbour));
 					mapper.put(adjStation.getName(), otherStation);
 					adjStation.setMarked();
 					pq.add(adjStation);
 				}
 
+				// once we find destination, backtrack
 				if(adjStation.getName().equals(destination)) {
 					answer.add(0, adjStation.getName());
-					String prevLine = "";
+					String prevLine = ""; // tracks trainline
 					while (!destination.equals(origin)) {									
 						for (String par : mapper.get(destination).keySet()) {
 							if (prevLine.isEmpty()) {
@@ -490,17 +492,17 @@ public class RailNetworkAdvanced {
 
 	public HashMap<String, String> getLineNeighbors(Station s) {
 		HashMap<String, String> neighbors = new HashMap<>();
-		for(String temp : s.getLines().keySet()){
+		for (String temp : s.getLines().keySet()) {
 			int stop = s.getLines().get(temp);
-			if(stop==1){
-				neighbors.put(trainMap.get(temp).get(stop+1), temp);
+			if (stop == 1) {
+				neighbors.put(trainMap.get(temp).get(stop + 1), temp);
 			}
-			else if(stop==trainMap.get(temp).size()){
-				neighbors.put(trainMap.get(temp).get(stop-1), temp);
+			else if (stop == trainMap.get(temp).size()) {
+				neighbors.put(trainMap.get(temp).get(stop - 1), temp);
 			}
-			else{
-				neighbors.put(trainMap.get(temp).get(stop+1), temp);
-				neighbors.put(trainMap.get(temp).get(stop-1), temp);
+			else {
+				neighbors.put(trainMap.get(temp).get(stop + 1), temp);
+				neighbors.put(trainMap.get(temp).get(stop - 1), temp);
 			}
 		}
 		return neighbors;
