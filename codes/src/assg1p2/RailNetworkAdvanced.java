@@ -372,9 +372,7 @@ public class RailNetworkAdvanced {
 						HashMap<String, Integer> temp = new HashMap<>();
 						temp.put(b, stationList.get(a).getAdjacentStations().get(stationList.get(b)));
 						distances.put(a, temp);
-						System.err.println(b);
 					} else {
-						System.out.println(b);
 						HashMap<String, Integer> temp = new HashMap<>();
 						temp.put(b, Integer.MAX_VALUE);
 						distances.put(a, temp);
@@ -389,21 +387,27 @@ public class RailNetworkAdvanced {
 			}
 		}
 
-		System.out.println(distances);
 
 		for (String c : stationList.keySet()) { // k
 			for (String a : stationList.keySet()) { // i
 				for (String b : stationList.keySet()) { // j
-					int newVal = distLookup.get(getCombinedName(a, c)) + distLookup.get(getCombinedName(c, b));
-					if (newVal < distLookup.get(getCombinedName(a, b))) {
-						distLookup.replace(getCombinedName(a, b), newVal);
-						// do ratio calculations
+					int newVal = distances.get(a).get(c) + distances.get(c).get(b);
+					if (newVal < distances.get(a).get(b) && newVal >= 0) {
+						distances.get(a).replace(b, newVal);
+					}
+
+					if (!ratios.containsKey(a)) {
+						HashMap<String, Double> temp = new HashMap<>();
+						temp.put(b, (double) distances.get(a).get(b) / computeDistance(a, b));
+						ratios.put(a, temp);
+					} else {
+						ratios.get(a).put(b, (double) distances.get(a).get(b) / computeDistance(a, b));
 					}
 				}
 			}
 		}
-
-		return null;
+		
+		return ratios;
 	}
 	
 	/**
