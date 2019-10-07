@@ -2,6 +2,7 @@ package assg1p2;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.Before;
@@ -119,5 +120,76 @@ public class Stage3Test {
 
 		assertEquals(178,ans.size());
 		assertEquals(expected,actual,epsilon);
+	}
+
+	public void routeMinStopWithRoutesTest1() {
+		String origin = "Beecroft";
+		String destination = "Chatswood";
+		String[] expected = {"T9 towards Gordon from Hornsby", "Beecroft", "Cheltenham", "Epping",
+							"Metro towards Chatswood from Epping", "Epping", "Macquarie University",
+							"Macquarie Park", "North Ryde", "Chatswood"};
+		
+		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
+		assertArrayEquals(expected, actual.toArray());
+	}
+
+	public void routeMinStopWithRoutesTest2() {
+		String origin = "Chatswood";
+		String destination = "Beecroft";
+		String[] expected = {"Metro towards Epping from Chatswood", "Chatswood", "North Ryde", "Macquarie Park",
+							"Macquarie University", "Epping", "T9 towards Hornsby from Gordon",
+							"Epping", "Cheltenham", "Beecroft"};
+		
+		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
+		assertArrayEquals(expected, actual.toArray());
+	}
+
+	public void routeMinStopWithRoutesTest3() {
+		String origin = "Epping";
+		String destination = "Strathfield";
+		String[] expected = {"T9 towards Hornsby from Gordon", "Epping", "Eastwood", "Denistone",
+							"West Ryde", "Meadowbank", "Rhodes", "Concord West",
+							"North Strathfield", "Strathfield"};
+		
+		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
+		assertArrayEquals(expected, actual.toArray());
+	}
+
+	public void routeMinStopWithRoutesTest4() {
+		String origin = "Epping";
+		String destination = "Redfern";
+		String[] expected = {"T9 towards Hornsby from Gordon", "Epping", "Eastwood", "Denistone",
+							"West Ryde", "Meadowbank", "Rhodes", "Concord West",
+							"North Strathfield", "Strathfield", "T1 towards Berowra from Lidcombe",
+							"Strathfield", "Redfern"};
+							// "T1 towards Berowra from Richmond"
+							// "T1 towards Berowra from Emu Plains"
+		
+		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
+		assertArrayEquals(expected, actual.toArray());
+	}
+
+	public void routeMinStopWithRoutesTest5() {
+		String origin = "Hornsby";
+		String destination = "Ashfield";
+		String[] expected = {"T9 towards Hornsby from Gordon", "Epping", "Eastwood", "Denistone",
+							"West Ryde", "Meadowbank", "Rhodes", "Concord West",
+							"North Strathfield", "Strathfield", "T2 towards Museum from Parramatta",
+							"Strathfield", "Burwood", "Croydon", "Ashfield"};
+							// "T2 towards Museum from Leppington"
+		
+		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
+		assertArrayEquals(expected, actual.toArray());
+	}
+
+	public void routeMinStopWithRoutesTest6() {
+		String origin = "Macarthur";
+		String destination = "Liverpool";
+		String[] expected = {"T8 towards Town Hall from Macarthur", "Campbelltown", "Leumeah", "Minto",
+							"Ingleburn", "Macquarie Fields", "Glenfield", "T2 towards Museum from Leppington",
+							"Glenfield", "Casula", "Liverpool"};
+		
+		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
+		assertArrayEquals(expected, actual.toArray());
 	}
 }
