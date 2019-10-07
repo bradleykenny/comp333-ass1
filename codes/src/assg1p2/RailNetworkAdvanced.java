@@ -11,9 +11,6 @@ public class RailNetworkAdvanced {
 	private TreeMap<String, Station> stationList;
 	private TreeMap<String, Line> lineList;
 
-	private HashMap<String, Double> ratioLookup;
-	private ArrayList<String> routeLookup;
-
 	// delete this before submitting
 	public static void main(String[] args) {
 		String stationData = "src/data/station_data.csv";
@@ -27,8 +24,6 @@ public class RailNetworkAdvanced {
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
 		lineList = new TreeMap<>();
-		ratioLookup = new HashMap<>();
-		routeLookup = new ArrayList<>();
 		
 		try {	
 			readLinesData(lineData);
