@@ -1,6 +1,6 @@
 package assg1p2;
 
-public class Line {
+public class Line implements Comparable<Line> {
 	String code;
 	String line;
 	String start;
@@ -23,5 +23,18 @@ public class Line {
 			name = end + " " +  start;
 		}
 		return name;
+	}
+
+	public String getCode() {
+		return this.code;
+	}
+
+	/* compareTo method since we are implementing Comparable */
+	@Override
+	public int compareTo(Line other) {
+		if (other != null)
+			return this.code.compareTo(other.getCode());
+		else
+			return 1;
 	}
 }

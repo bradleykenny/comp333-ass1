@@ -3,28 +3,31 @@ package assg1p2;
 import java.io.*;
 import java.util.*;
 
-import assg1p1.Station;
+import assg1p2.Station;
 
 
 public class RailNetworkAdvanced {
 
 	private TreeMap<String, Station> stationList;
+	private TreeMap<String, Line> lineList;
+
 	private HashMap<String, Double> ratioLookup;
 	private HashMap<String, Integer> distLookup;
 	private ArrayList<String> routeLookup;
 
 	// delete this before submitting
 	public static void main(String[] args) {
-		String stationData = "codes/src/data/station_data.csv";
-		String connectionData = "codes/src/data/adjacent_stations.csv";
-		String linesData = "codes/src/data/lines_data.csv";
+		String stationData = "src/data/station_data.csv";
+		String connectionData = "src/data/adjacent_stations.csv";
+		String linesData = "src/data/lines_data.csv";
 		RailNetworkAdvanced rn = new RailNetworkAdvanced(stationData, connectionData, linesData);
 
-		System.out.println(rn.routeMinStopWithRoutes("Richmond", "Blacktown"));
+		System.out.println(rn.routeMinStopWithRoutes("Beecroft", "Chatswood"));
 	}
 
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
+		lineList = new TreeMap<>();
 		ratioLookup = new HashMap<>();
 		distLookup = new HashMap<>();
 		routeLookup = new ArrayList<>();
@@ -46,20 +49,16 @@ public class RailNetworkAdvanced {
 	 * @throws IOException
 	 */
 
-	HashMap<String, ArrayList<String>> trainLines = new HashMap<>();
 
 	public void readLinesData(String infile) throws IOException {
 		// update for lines data: { Code, Line, Start, End, StationCount }
 		BufferedReader in = new BufferedReader(new FileReader(infile));
 		in.readLine(); // remove headers
 		while (in.ready()) {
-			ArrayList<String> data = new ArrayList<String>();
-			String[] temp = in.readLine().split(",");
-			for(String items: temp){
-				data.add(items);
-				trainLines.put(temp[0], data);
-			}
-		} 
+			String[] split = in.readLine().split(",");
+			Line temp = new Line(split[0], split[1], split[2], split[3], Integer.parseInt(split[4]));
+			lineList.put(split[0], temp);
+		}
 		in.close();
 	}
 
@@ -79,9 +78,16 @@ public class RailNetworkAdvanced {
 	public void readStationData(String infile) throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(infile));
 		in.readLine(); // remove headers
+		String[] stationNames = { "T1E", "T1R", "T1B", "T2P", "T2L", "T3B", "T3L", "T4C", "T4W", "T5", "T6", "T7", "T8M", "T8R", "T9", "M" };
 		while (in.ready()) {
 			String[] temp = in.readLine().split(",");
 			stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
+			for (int i = 3; i < temp.length; i++) {
+				if (!temp[i].isEmpty()) {
+					stationList.get(temp[0]).addLine(lineList.get(stationNames[i-3]), Integer.parseInt(temp[i]));
+				}
+			}
+
 		} in.close();
 	}
 	/**
@@ -474,7 +480,6 @@ public class RailNetworkAdvanced {
 					// Once we get to the destination, stop and return
 					if (adj.getName().equals(destination)) {
 						ArrayList<String> temp = getStops(parents, origin, destination);
-						System.out.println(temp);
 						return temp;
 					}
 				}
@@ -502,6 +507,12 @@ public class RailNetworkAdvanced {
 		// Above will havve trouble if a swap is required; Beecroft -> Chatswood
 		// From original arrayList, O(n) and list all the station lines attached to stations
 		// https://www.geeksforgeeks.org/shortest-path-for-directed-acyclic-graphs/
+	}
+
+	public ArrayList<String> getLineInformation(ArrayList<String> route) {
+
+
+		return null;
 	}
 
 }

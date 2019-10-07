@@ -25,6 +25,9 @@ public class Station implements Comparable<Station>{
 	 */
 	private TreeMap<Station,Integer> adjacentStations;
 
+	// The train lines the station is connected to.
+	private TreeMap<Line, Integer> lines;
+
 	/**
 	 * Construct a new Station object
 	 * 
@@ -39,6 +42,7 @@ public class Station implements Comparable<Station>{
 		this.marked = false;
 		
 		adjacentStations = new TreeMap<Station,Integer>();
+		lines = new TreeMap<Line, Integer>();
 	}
 	
 	/**
@@ -50,6 +54,10 @@ public class Station implements Comparable<Station>{
 	public TreeMap<Station,Integer> getAdjacentStations(){
 		return new TreeMap<Station,Integer>(adjacentStations);
 	}
+
+	public TreeMap<Line, Integer> getLines() {
+		return new TreeMap<Line, Integer>(lines);
+	}
 	
 	/**
 	 * Add Station s as a neighbour of this station
@@ -60,6 +68,12 @@ public class Station implements Comparable<Station>{
 	public void addNeighbour(Station s, Integer distance) {
 		if (s != null)
 			this.adjacentStations.put(s, distance);
+	}
+	
+	public void addLine(Line l, int num) {
+		if (l != null) {
+			this.lines.put(l, num);
+		}
 	}
 	
 	
