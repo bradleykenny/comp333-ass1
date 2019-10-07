@@ -317,19 +317,11 @@ public class RailNetworkAdvanced {
 		String name = getCombinedName(head, tail);
 		
 		if (!ratioLookup.containsKey(name)) {
-			
-			//if (!distLookup.containsKey(name)) {
 			int d1 = findTotalDistance(route);
 			route.remove(route.size() - 1);
-			//	distLookup.put(name, d1);
-			//} 
-			//else {
-			//	route.remove(route.size()-1);
-			//	d1 = distLookup.get(name);
-			//}
 			ratioLookup.put(name, d1/d2);
 		}
-		else{
+		else {
 			route.remove(0);
 		}
 		mapRatios(route);
