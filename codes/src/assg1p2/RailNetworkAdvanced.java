@@ -424,7 +424,6 @@ public class RailNetworkAdvanced {
 		Queue<Station> pq = new LinkedList<Station>();
 
 		ArrayList<String> answer = new ArrayList<>();
-		ArrayList<String> lineInfo = new ArrayList<>();
 
 		pq.add(stationList.get(origin));
 
@@ -446,14 +445,11 @@ public class RailNetworkAdvanced {
 				if(adjStation.getName().equals(destination))
 				{
 					answer.add(0, adjStation.getName());
-					//lineInfo.add(0, lineNeighbors.get(temp));
 					String prevLine = "";
 					while(!destination.equals(origin))
 					{									
 						for (String par : mapper.get(destination).keySet()) {
-							System.out.println(mapper.get(destination).get(par));
 							if (prevLine.isEmpty()) {
-								//answer.add(0, mapper.get(destination).get(par));
 								prevLine = mapper.get(destination).get(par);
 							}
 
@@ -469,7 +465,6 @@ public class RailNetworkAdvanced {
 							}
 							destination = par;
 						}
-						//lineInfo.add(0, lineNeighbors.get(destination));
 					} 
 					return answer;
 				}
