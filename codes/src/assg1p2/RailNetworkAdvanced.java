@@ -307,7 +307,7 @@ public class RailNetworkAdvanced {
 	}
 
 	public void mapRatios(ArrayList<String> route){
-		if (route.size() < 2){
+		if (route.size() < 2) {
 			return;
 		}
 
@@ -375,7 +375,6 @@ public class RailNetworkAdvanced {
 				}
 			}
 		}
-
 
 		for (String c : stationList.keySet()) { 
 			for (String a : stationList.keySet()) { 
