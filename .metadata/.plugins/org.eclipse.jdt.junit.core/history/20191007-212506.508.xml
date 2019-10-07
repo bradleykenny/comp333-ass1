@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="Stage3Test" project="codes" tests="8" started="8" failures="0" errors="0" ignored="0">
+  <testsuite name="assg1p2.Stage3Test" time="2.706">
+    <testcase name="computeAllRatioTest1" classname="assg1p2.Stage3Test" time="0.918"/>
+    <testcase name="computeAllRatioTest2" classname="assg1p2.Stage3Test" time="0.788"/>
+    <testcase name="computeAllRatioTest3" classname="assg1p2.Stage3Test" time="0.369"/>
+    <testcase name="computeAllRatioTest4" classname="assg1p2.Stage3Test" time="0.532"/>
+    <testcase name="computeRatioTest1" classname="assg1p2.Stage3Test" time="0.015"/>
+    <testcase name="computeRatioTest2" classname="assg1p2.Stage3Test" time="0.027"/>
+    <testcase name="computeRatioTest3" classname="assg1p2.Stage3Test" time="0.029"/>
+    <testcase name="computeRatioTest4" classname="assg1p2.Stage3Test" time="0.028"/>
+  </testsuite>
+</testrun>
