@@ -359,11 +359,8 @@ public class RailNetworkAdvanced {
 	 * @return a hashmap containing the ratios
 	 */
 	public HashMap<String,HashMap<String,Double>> computeAllRatio() {
-		distLookup = new HashMap<>(); // distances will be bidirectional
 		HashMap<String, HashMap<String, Double>> ratios = new HashMap<>();
 		HashMap<String, HashMap<String, Integer>> distances = new HashMap<>();
-
-		// need to calculate all shortest paths
 
 		for (String a : stationList.keySet()) {
 			for (String b : stationList.keySet()) {
@@ -388,9 +385,9 @@ public class RailNetworkAdvanced {
 		}
 
 
-		for (String c : stationList.keySet()) { // k
-			for (String a : stationList.keySet()) { // i
-				for (String b : stationList.keySet()) { // j
+		for (String c : stationList.keySet()) { 
+			for (String a : stationList.keySet()) { 
+				for (String b : stationList.keySet()) { 
 					int newVal = distances.get(a).get(c) + distances.get(c).get(b);
 					if (newVal < distances.get(a).get(b) && newVal >= 0) {
 						distances.get(a).replace(b, newVal);
