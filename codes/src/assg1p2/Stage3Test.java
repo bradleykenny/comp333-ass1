@@ -172,11 +172,11 @@ public class Stage3Test {
 	public void routeMinStopWithRoutesTest5() {
 		String origin = "Hornsby";
 		String destination = "Ashfield";
-		String[] expected = {"T9 towards Hornsby from Gordon", "Epping", "Eastwood", "Denistone",
-							"West Ryde", "Meadowbank", "Rhodes", "Concord West",
-							"North Strathfield", "Strathfield", "T2 towards Museum from Parramatta",
-							"Strathfield", "Burwood", "Croydon", "Ashfield"};
-							// "T2 towards Museum from Leppington"
+		String[] expected = {"T9 towards Hornsby from Gordon", "Hornsby", "Normanhurst", 
+							"Pennant Hills", "Beecroft", "Cheltenham", "Epping", "Eastwood", 
+							"Denistone", "West Ryde", "Meadowbank", "Rhodes", "Concord West",
+							"North Strathfield", "Strathfield", "T2 towards Museum from Leppington",
+							"Strathfield", "Burwood", "Ashfield"};
 		
 		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
 		assertArrayEquals(expected, actual.toArray());
