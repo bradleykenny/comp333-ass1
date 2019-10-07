@@ -82,7 +82,7 @@ public class RailNetworkAdvanced {
 		while (in.ready()) {
 			String[] temp = in.readLine().split(",");
 			stationList.put(temp[0], new Station(temp[0], Double.parseDouble(temp[1]), Double.parseDouble(temp[2])));
-			for (int i = 3; i < temp.length; i++) {
+			for (int i = 3; i < temp.length - 1; i++) {
 				if (!temp[i].isEmpty()) {
 					stationList.get(temp[0]).addLine(lineList.get(stationNames[i-3]), Integer.parseInt(temp[i]));
 				}
@@ -392,8 +392,8 @@ public class RailNetworkAdvanced {
 		}
 
 		for (String c : stationList.keySet()) { 
-			for (String a : stationList.keySet()) { 
-				for (String b : stationList.keySet()) { 
+			for (String a : stationList.keySet()) {
+				for (String b : stationList.keySet()) {
 					int newVal = distances.get(a).get(c) + distances.get(c).get(b);
 					if (newVal < distances.get(a).get(b) && newVal >= 0) {
 						distances.get(a).replace(b, newVal);
@@ -409,7 +409,6 @@ public class RailNetworkAdvanced {
 				}
 			}
 		}
-		
 		return ratios;
 	}
 	
