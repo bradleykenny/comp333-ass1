@@ -361,17 +361,35 @@ public class RailNetworkAdvanced {
 	public HashMap<String,HashMap<String,Double>> computeAllRatio() {
 		distLookup = new HashMap<>(); // distances will be bidirectional
 		HashMap<String, HashMap<String, Double>> ratios = new HashMap<>();
+		HashMap<String, HashMap<String, Integer>> distances = new HashMap<>();
 
 		// need to calculate all shortest paths
 
 		for (String a : stationList.keySet()) {
 			for (String b : stationList.keySet()) {
-				String name = getCombinedName(a, b);
-				if (!distLookup.containsKey(name)) {
-					distLookup.put(name, Integer.MAX_VALUE); // probably dont want to do
+				if (!distances.containsKey(a)) {
+					if (stationList.get(a).getAdjacentStations().containsKey(stationList.get(b))) {
+						HashMap<String, Integer> temp = new HashMap<>();
+						temp.put(b, stationList.get(a).getAdjacentStations().get(stationList.get(b)));
+						distances.put(a, temp);
+						System.err.println(b);
+					} else {
+						System.out.println(b);
+						HashMap<String, Integer> temp = new HashMap<>();
+						temp.put(b, Integer.MAX_VALUE);
+						distances.put(a, temp);
+					}
+				} else {
+					if (stationList.get(a).getAdjacentStations().containsKey(stationList.get(b))) {
+						distances.get(a).put(b, stationList.get(a).getAdjacentStations().get(stationList.get(b)));
+					} else {
+						distances.get(a).put(b, Integer.MAX_VALUE);
+					}
 				}
 			}
 		}
+
+		System.out.println(distances);
 
 		for (String c : stationList.keySet()) { // k
 			for (String a : stationList.keySet()) { // i

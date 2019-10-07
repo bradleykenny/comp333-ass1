@@ -14,9 +14,9 @@ public class Stage3Test {
 
 	RailNetworkAdvanced r;
 	@Before public void initialize() {
-		String stationData = "codes/src/data/station_data.csv";
-		String connectionData = "codes/src/data/adjacent_stations.csv";
-		String linesData = "codes/src/data/lines_data.csv";
+		String stationData = "src/data/station_data.csv";
+		String connectionData = "src/data/adjacent_stations.csv";
+		String linesData = "src/data/lines_data.csv";
 		r = new RailNetworkAdvanced(stationData,connectionData,linesData);
 	}	
 	
