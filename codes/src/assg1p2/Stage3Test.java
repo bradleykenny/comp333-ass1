@@ -164,7 +164,7 @@ public class Stage3Test {
 		String destination = "Redfern";
 		String[] expected = {"T9 towards Hornsby from Gordon", "Epping", "Eastwood", "Denistone",
 							"West Ryde", "Meadowbank", "Rhodes", "Concord West",
-							"North Strathfield", "Strathfield", "T1 towards Berowra from Lidcombe",
+							"North Strathfield", "Strathfield", "T1 towards Richmond from Chatswood",
 							"Strathfield", "Redfern"};
 							// "T1 towards Berowra from Richmond"
 							// "T1 towards Berowra from Emu Plains"

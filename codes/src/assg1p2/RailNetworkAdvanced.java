@@ -12,16 +12,6 @@ public class RailNetworkAdvanced {
 	private TreeMap<String, Line> lineList;
 	private TreeMap<String, HashMap<Integer, String>> trainMap;
 
-	// delete this before submitting
-	public static void main(String[] args) {
-		String stationData = "src/data/station_data.csv";
-		String connectionData = "src/data/adjacent_stations.csv";
-		String linesData = "src/data/lines_data.csv";
-		RailNetworkAdvanced rn = new RailNetworkAdvanced(stationData, connectionData, linesData);
-
-		System.out.println(rn.routeMinStopWithRoutes("Hornsby", "Ashfield"));
-	}
-
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
 		lineList = new TreeMap<>();
@@ -445,14 +435,14 @@ public class RailNetworkAdvanced {
 
 				// once we find destination, backtrack
 				if(adjStation.getName().equals(destination)) {
-					//answer.add(0, adjStation.getName());
 					String prevLine = ""; // tracks trainline
 					while (!destination.equals(origin)) {									
 						for (String parent : mapper.get(destination).keySet()) {
 							if (prevLine.isEmpty()) {
 								prevLine = mapper.get(destination).get(parent);
 							}
-
+							
+							// if prevLine doesnt match current line, add line change info
 							if (!mapper.get(destination).get(parent).equals(prevLine)) {
 								answer.add(0, destination);
 								answer.add(0, lineInfo(parent, destination, prevLine));
@@ -465,10 +455,9 @@ public class RailNetworkAdvanced {
 							}
 							
 							prevLine = mapper.get(destination).get(parent);
-							destination = parent;
+							destination = parent; // update to be previous on line
 						}
 					} 
-					System.out.println(answer);
 					return answer;
 				}
 			}
@@ -477,6 +466,11 @@ public class RailNetworkAdvanced {
 		return new ArrayList<>();
 	}
 
+	/* 
+	 * Helper function desined to return the line information, including direction of travel.
+	 * The function operates by getting two stations position on the line, and using
+	 * these numbers to calculate the direction of travel. 
+	 */
 	public String lineInfo(String par, String destination, String prevLine) {
 		int parVal = 0;
 		int desVal = 0;
@@ -492,6 +486,13 @@ public class RailNetworkAdvanced {
 		return lineList.get(prevLine).getLineDirection(desVal - parVal);
 	}
 
+	/*
+	 * Helper function to find all neighbouring stations on all lines for a particular
+	 * station. 
+	 * 
+	 * @return a HashMap containing these values. Key being the station name and value being
+	 * the line.
+	 */
 	public HashMap<String, String> getLineNeighbors(Station s) {
 		HashMap<String, String> neighbors = new HashMap<>();
 		for (String temp : s.getLines().keySet()) {

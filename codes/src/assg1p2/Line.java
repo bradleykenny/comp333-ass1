@@ -17,7 +17,7 @@ public class Line implements Comparable<Line> {
 
 	public String getLineDirection(int direction) {
 		String name;
-		if (direction <= 0) {
+		if (direction > 0) {
 			name = line + " towards " + start + " from " + end;
 		} else {
 			name = line + " towards " + end + " from " +  start;
