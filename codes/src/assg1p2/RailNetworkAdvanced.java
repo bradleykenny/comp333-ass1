@@ -13,6 +13,16 @@ public class RailNetworkAdvanced {
 	private HashMap<String, Integer> distLookup;
 	private ArrayList<String> routeLookup;
 
+	// delete this before submitting
+	public static void main(String[] args) {
+		String stationData = "codes/src/data/station_data.csv";
+		String connectionData = "codes/src/data/adjacent_stations.csv";
+		String linesData = "codes/src/data/lines_data.csv";
+		RailNetworkAdvanced rn = new RailNetworkAdvanced(stationData, connectionData, linesData);
+
+		System.out.println(rn.routeMinStopWithRoutes("Richmond", "Blacktown"));
+	}
+
 	public RailNetworkAdvanced(String trainData, String connectionData, String lineData) {
 		stationList = new TreeMap<>();
 		ratioLookup = new HashMap<>();
@@ -424,7 +434,60 @@ public class RailNetworkAdvanced {
 	 * @param destination	the end station
 	 * @return				the route taken
 	 */
-	public ArrayList<String>routeMinStopWithRoutes(String origin, String destination){
+	public ArrayList<String> routeMinStopWithRoutes(String origin, String destination) {
+		if (!stationList.containsKey(origin) || !stationList.containsKey(destination)) {
+			return new ArrayList<String>();
+		}
+		if (origin.equals(destination)) {
+			ArrayList<String> ans = new ArrayList<String>();
+			ans.add(origin);
+			return ans;
+		}
+		
+		HashMap<String, Integer> stops = new HashMap<>(); // Value is num of stops from Key to d
+		HashMap<String, String> parents = new HashMap<>(); // Value is the station with least stops to the Key (in direction o -> d)
+  
+		// Initialisation of values
+        for (String s : stationList.keySet()) { 
+            stops.put(s, Integer.MAX_VALUE);
+			stationList.get(s).setUnmarked();
+			parents.put(s, "");
+        } 
+  
+        // Distance of origin to itself is always 1 stop (being itself) 
+        stops.replace(origin, 1);
+		
+        for (int i = 0; i < stationList.size(); i++) { 
+            int min = Integer.MAX_VALUE;
+			String nextShortest = null; 
+  
+			// Find next best station in terms of least stops
+			for (String possibleStation : stationList.keySet()) {
+				if (!stationList.get(possibleStation).isMarked() && stops.get(possibleStation) <= min) { 
+					min = stops.get(possibleStation); 
+					nextShortest = possibleStation; 
+				} 
+			} stationList.get(nextShortest).setMarked();
+  
+            // Updating distance of adjacent stations to picked station
+            for (Station adj : stationList.get(nextShortest).getAdjacentStations().keySet()) { 
+				if (!stationList.get(adj.getName()).isMarked() && stationList.get(nextShortest).getAdjacentStations().containsKey(adj) && stops.get(nextShortest) != Integer.MAX_VALUE && (stops.get(nextShortest) + 1) < (stops.get(adj.getName()))) {
+					stops.replace(adj.getName(), stops.get(nextShortest) + 1); // Update dist to reflect new num of stops to this shortest path
+					parents.replace(adj.getName(), nextShortest); // Update parent to be new min stops in shortest path to this station
+					// Once we get to the destination, stop and return
+					if (adj.getName().equals(destination)) {
+						ArrayList<String> temp = getStops(parents, origin, destination);
+						System.out.println(temp);
+						return temp;
+					}
+				}
+			}
+		}
+		
+		// If don't find anything, return empty ArrayList.
+		return new ArrayList<>();
+
+
 
 		// using routeMinStop, find the shortest path from origin to destination; in an ArrayList
 		// Regarding lines data, need to create a Map that contains all the stations in a line?
