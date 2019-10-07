@@ -12,7 +12,6 @@ public class RailNetworkAdvanced {
 	private TreeMap<String, Line> lineList;
 
 	private HashMap<String, Double> ratioLookup;
-	private HashMap<String, Integer> distLookup;
 	private ArrayList<String> routeLookup;
 
 	// delete this before submitting
@@ -29,7 +28,6 @@ public class RailNetworkAdvanced {
 		stationList = new TreeMap<>();
 		lineList = new TreeMap<>();
 		ratioLookup = new HashMap<>();
-		distLookup = new HashMap<>();
 		routeLookup = new ArrayList<>();
 		
 		try {	
@@ -303,43 +301,9 @@ public class RailNetworkAdvanced {
 	 * @return	s			the ratio d1/d2 as explained above
 	 */
 	public double computeRatio(String origin, String destination) {
-		if (origin.equals(destination)) {
-			return 0;
-		}
-		String name = getCombinedName(origin, destination);
-		if (!ratioLookup.containsKey(name)) {
-			routeLookup = new ArrayList<>(routeMinDistance(origin, destination));
-			for(int i = 0; i < routeLookup.size(); i++){
-				List<String> subList = routeLookup.subList(i, routeLookup.size());
-				ArrayList<String> path = new ArrayList<>(subList);
-				mapRatios(path);
-			}
-		}
-		if (ratioLookup.containsKey(name))
-			return ratioLookup.get(name);
-		else
-			return (double) 0;
-	}
-
-	public void mapRatios(ArrayList<String> route){
-		if (route.size() < 2) {
-			return;
-		}
-
-		String head = route.get(0);
-		String tail = route.get(route.size()-1);
-		double d2 = computeDistance(head, tail);
-		String name = getCombinedName(head, tail);
-		
-		if (!ratioLookup.containsKey(name)) {
-			int d1 = findTotalDistance(route);
-			route.remove(route.size() - 1);
-			ratioLookup.put(name, d1/d2);
-		}
-		else {
-			route.remove(0);
-		}
-		mapRatios(route);
+		int d1 = findTotalDistance(routeMinDistance(origin, destination));
+		int d2 = computeDistance(origin, destination);
+		return (double) d1 / d2;
 	}
 
 	public String getCombinedName(String n1, String n2) {
