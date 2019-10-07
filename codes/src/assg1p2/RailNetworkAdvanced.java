@@ -451,7 +451,7 @@ public class RailNetworkAdvanced {
 				}
 			}
 		} 
-		return null;
+		return new ArrayList<>();
 	}
 
 
