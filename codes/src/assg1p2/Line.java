@@ -17,13 +17,13 @@ public class Line implements Comparable<Line> {
 
 	public String getName(int direction) {
 		String name;
-		if (direction >= 0) {
-			name = code + " towards " + start + " from " + end;
+		if (direction > 0) {
+			name = line + " towards " + start + " from " + end;
 		} else {
-			name = code + " towards " + end + " from " +  start;
+			name = line + " towards " + end + " from " +  start;
 		}
 
-		//System.out.println(direction);
+		System.out.println(direction);
 		return name;
 	}
 

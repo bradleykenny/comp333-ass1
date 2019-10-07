@@ -122,7 +122,7 @@ public class RailNetworkAdvanced {
 	 * Note that two more methods are provided below for your convenience 
 	 * and you should not directly call this method
 	 * 
-	 * source://www.geeksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/
+	 * source://www.Nksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/
 	 * 
 	 * @param lat1 latitude coordinate of x
 	 * @param lon1 longitude coordinate of x
@@ -415,11 +415,13 @@ public class RailNetworkAdvanced {
 		if (!stationList.containsKey(origin) || !stationList.containsKey(destination)) {
 			return new ArrayList<String>();
 		}
+
 		if (origin.equals(destination)) {
 			ArrayList<String> ans = new ArrayList<String>();
 			ans.add(origin);
 			return ans;
 		}
+
 		HashMap<String, HashMap<String, String>> mapper = new HashMap<>();
 		Queue<Station> pq = new LinkedList<Station>();
 
@@ -427,14 +429,12 @@ public class RailNetworkAdvanced {
 
 		pq.add(stationList.get(origin));
 
-		while (pq.size() != stationList.keySet().size()) 
-		{ 
+		while (pq.size() != stationList.keySet().size()) { 
 			Station parentStation = pq.poll();
 			HashMap<String, String> lineNeighbors = getLineNeighbors(parentStation);
-			for(String temp: lineNeighbors.keySet()) 
-			{
+			for (String temp: lineNeighbors.keySet()) {
 				Station adjStation = stationList.get(temp);
-				if(!adjStation.isMarked()) {
+				if (!adjStation.isMarked()) {
 					HashMap<String, String> otherStation = new HashMap<>();
 					otherStation.put(parentStation.getName(), lineNeighbors.get(temp));
 					mapper.put(adjStation.getName(), otherStation);
@@ -442,12 +442,10 @@ public class RailNetworkAdvanced {
 					pq.add(adjStation);
 				}
 
-				if(adjStation.getName().equals(destination))
-				{
+				if(adjStation.getName().equals(destination)) {
 					answer.add(0, adjStation.getName());
 					String prevLine = "";
-					while(!destination.equals(origin))
-					{									
+					while (!destination.equals(origin)) {									
 						for (String par : mapper.get(destination).keySet()) {
 							if (prevLine.isEmpty()) {
 								prevLine = mapper.get(destination).get(par);
@@ -456,13 +454,14 @@ public class RailNetworkAdvanced {
 							if (!mapper.get(destination).get(par).equals(prevLine)) {
 								answer.add(0, par);
 								answer.add(0, lineInfo(par, destination, prevLine));
-								prevLine = mapper.get(destination).get(par);
 							}
 							
 							answer.add(0, par);
 							if (par.equals(origin)) {
 								answer.add(0, lineInfo(par, destination, prevLine));
 							}
+							
+							prevLine = mapper.get(destination).get(par);
 							destination = par;
 						}
 					} 

@@ -191,7 +191,7 @@ public class Stage3Test {
 	public void routeMinStopWithRoutesTest6() {
 		String origin = "Macarthur";
 		String destination = "Liverpool";
-		String[] expected = {"T8 towards Town Hall from Macarthur", "Campbelltown", "Leumeah", "Minto",
+		String[] expected = {"T8 towards Town Hall from Macarthur", "Macarthur", "Campbelltown", "Leumeah", "Minto",
 							"Ingleburn", "Macquarie Fields", "Glenfield", "T2 towards Museum from Leppington",
 							"Glenfield", "Casula", "Liverpool"};
 		
