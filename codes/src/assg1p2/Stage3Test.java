@@ -166,8 +166,6 @@ public class Stage3Test {
 							"West Ryde", "Meadowbank", "Rhodes", "Concord West",
 							"North Strathfield", "Strathfield", "T1 towards Richmond from Chatswood",
 							"Strathfield", "Redfern"};
-							// "T1 towards Berowra from Richmond"
-							// "T1 towards Berowra from Emu Plains"
 		
 		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
 		assertArrayEquals(expected, actual.toArray());
