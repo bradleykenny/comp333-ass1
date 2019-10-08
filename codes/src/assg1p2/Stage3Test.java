@@ -150,7 +150,7 @@ public class Stage3Test {
 	public void routeMinStopWithRoutesTest3() {
 		String origin = "Epping";
 		String destination = "Strathfield";
-		String[] expected = {"T9 towards Hornsby from Gordon", "Epping", "Eastwood", "Denistone",
+		String[] expected = {"T9 towards Gordon from Hornsby", "Epping", "Eastwood", "Denistone",
 							"West Ryde", "Meadowbank", "Rhodes", "Concord West",
 							"North Strathfield", "Strathfield"};
 		
@@ -162,9 +162,9 @@ public class Stage3Test {
 	public void routeMinStopWithRoutesTest4() {
 		String origin = "Epping";
 		String destination = "Redfern";
-		String[] expected = {"T9 towards Hornsby from Gordon", "Epping", "Eastwood", "Denistone",
+		String[] expected = {"T9 towards Gordon from Hornsby", "Epping", "Eastwood", "Denistone",
 							"West Ryde", "Meadowbank", "Rhodes", "Concord West",
-							"North Strathfield", "Strathfield", "T1 towards Richmond from Chatswood",
+							"North Strathfield", "Strathfield", "T1 towards Chatswood from Richmond",
 							"Strathfield", "Redfern"};
 		
 		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
@@ -175,7 +175,7 @@ public class Stage3Test {
 	public void routeMinStopWithRoutesTest5() {
 		String origin = "Hornsby";
 		String destination = "Ashfield";
-		String[] expected = {"T9 towards Hornsby from Gordon", "Hornsby", "Normanhurst", 
+		String[] expected = {"T9 towards Gordon from Hornsby", "Hornsby", "Normanhurst", 
 							"Pennant Hills", "Beecroft", "Cheltenham", "Epping", "Eastwood", 
 							"Denistone", "West Ryde", "Meadowbank", "Rhodes", "Concord West",
 							"North Strathfield", "Strathfield", "T2 towards Museum from Leppington",
@@ -190,7 +190,7 @@ public class Stage3Test {
 		String origin = "Macarthur";
 		String destination = "Liverpool";
 		String[] expected = {"T8 towards Town Hall from Macarthur", "Macarthur", "Campbelltown", "Leumeah", "Minto",
-							"Ingleburn", "Macquarie Fields", "Glenfield", "T2 towards Museum from Leppington",
+							"Ingleburn", "Macquarie Fields", "Glenfield", "T5 towards Schofields from Leppington",
 							"Glenfield", "Casula", "Liverpool"};
 		
 		ArrayList<String> actual = r.routeMinStopWithRoutes(origin, destination);
